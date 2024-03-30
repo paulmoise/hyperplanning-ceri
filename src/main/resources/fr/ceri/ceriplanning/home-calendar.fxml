@@ -6,9 +6,146 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
 
-</AnchorPane>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.collections.FXCollections?>
+<VBox fx:id="vbRoot" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.HomeCalendarStudentController">
+
+
+    <AnchorPane  style="-fx-background-color:#f8f8ff;" >
+        <padding>
+            <Insets bottom="10.0" />
+        </padding>
+        <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0">
+
+            <HBox alignment="TOP_CENTER" spacing="10.0" >
+                <padding>
+                    <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
+                </padding>
+                <Button fx:id="btnFormation" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                        prefWidth="125" mnemonicParsing="false"
+                        onAction="#handleBtnOnActionHome" prefHeight="30.0"
+                        maxWidth="Infinity"
+
+                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Formation"
+                        textFill="#e7e5e5">
+                    <graphic>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-graduation-cap" iconSize="15"/>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnSalle" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                        prefWidth="125" mnemonicParsing="false"
+                        maxWidth="Infinity"
+                        onAction="#handleBtnOnActionHome" prefHeight="30.0"
+                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Salle"
+                        textFill="#e7e5e5">
+                    <graphic>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-home" iconSize="15"/>
+                    </graphic>
+                </Button>
+
+
+                <Button fx:id="btnEnseignant" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                        prefWidth="125" mnemonicParsing="false"
+                        maxWidth="Infinity"
+                        onAction="#handleBtnOnActionHome" prefHeight="30.0"
+                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Enseignant"
+                        textFill="#e7e5e5">
+                    <graphic>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-user-secret" iconSize="15"/>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="btnMatiere" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                        prefWidth="100" mnemonicParsing="false"
+                        maxWidth="Infinity"
+                        onAction="#handleBtnOnActionHome" prefHeight="30.0"
+                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Matiere"
+                        textFill="#e7e5e5">
+                    <padding>
+
+                    </padding>
+                    <graphic>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-book" iconSize="15"/>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <HBox style="-fx-font-weight: bold; -fx-font-size: 15px;" alignment="TOP_CENTER" spacing="10">
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" />
+                </padding>
+                <ComboBox fx:id="filterComboBox" layoutX="15.0" layoutY="33.0" prefWidth="250.0"
+                          promptText="Selectionner une formation">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="IA"/>
+                            <String fx:value="ILSEN"/>
+                            <String fx:value="SICOM"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <Button fx:id="btnSearch" alignment="BASELINE_LEFT" graphicTextGap="5.0"
+                        prefWidth="120" mnemonicParsing="false"
+                        maxWidth="Infinity"
+                         prefHeight="30.0"
+                         styleClass="btn, btn-success" text="Rechercher"
+                        textFill="#e7e5e5">
+                    <graphic>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-search" iconSize="10"/>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <HBox style="-fx-font-weight: bold; -fx-font-size: 15px;" alignment="TOP_CENTER" spacing="10">
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="15.0" />
+                </padding>
+                <Button fx:id="prevButton" styleClass="btn-sm, btn-primary"   maxWidth="Infinity"  onAction="#onPrevWeek" >
+                    <graphic>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-chevron-left" iconSize="15"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="todayButton" styleClass="btn, btn-primary"   maxWidth="Infinity" text="Aujourd'hui"  onAction="#onToday" >
+
+                </Button>
+                <Button fx:id="nextButton" styleClass="btn-sm, btn-primary"   maxWidth="Infinity" onAction="#onNextWeek"  >
+                    <graphic>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-chevron-right" iconSize="15"/>
+                    </graphic>
+                </Button>
+
+                <Label fx:id="activeMonth" prefWidth="100" maxWidth="Infinity" prefHeight="30" styleClass="lbl, lbl-default" text="Mars 2024"/>
+
+                <Region HBox.hgrow="ALWAYS"  prefWidth="5" maxWidth="Infinity" />
+
+                <DatePicker id="datePicker" prefHeight="25.0" prefWidth="250.0" showWeekNumbers="true" >
+
+                </DatePicker>
+                <ComboBox fx:id="calendarTypeComboBox" layoutX="15.0" layoutY="33.0" prefWidth="100.0"
+                          value="Day">
+
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Day"/>
+                            <String fx:value="Week"/>
+                            <String fx:value="Month"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </HBox>
+        </VBox>
+    </AnchorPane>
+
+    <HBox fx:id="calendarContentHBox" >
+
+    </HBox>
+
+</VBox>

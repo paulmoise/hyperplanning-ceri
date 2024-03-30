@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="OrdersSubscene"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.geometry.Insets?>
 
-</AnchorPane>
+
+<VBox fx:id="vbRoot" alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.OrdersSubseneController">
+    <children>
+        <Label text="Orders Subscene" textFill="WHITE"/>
+        <Label text="Use Passed Data in ListView!" textFill="WHITE"/>
+        <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0"/>
+    </children>
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+</VBox>

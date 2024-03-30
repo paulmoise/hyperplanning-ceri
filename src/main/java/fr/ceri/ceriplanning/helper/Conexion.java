@@ -1,6 +1,7 @@
-package fr.ceri.prototypeinterface.ceriplanning.helper;
+package fr.ceri.ceriplanning.helper;
 
-import fr.ceri.prototypeinterface.ceriplanning.model.CreateConnexion;
+
+import fr.ceri.ceriplanning.model.CreateConnexion;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

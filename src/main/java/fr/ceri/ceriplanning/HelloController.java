@@ -1,4 +1,4 @@
-package fr.ceri.ceriplanning.hyperplaningceri;
+package fr.ceri.ceriplanning;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

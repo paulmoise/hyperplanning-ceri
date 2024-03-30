@@ -1,15 +1,24 @@
-package fr.ceri.prototypeinterface.ceriplanning.helper;
+package fr.ceri.ceriplanning.helper;
 
-import fr.ceri.prototypeinterface.ceriplanning.model.DescriptionDetails;
 
-import java.time.*;
+import fr.ceri.ceriplanning.model.DescriptionDetails;
+
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.IsoFields;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.HashMap;
-import java.util.Map;
 public class Utils {
 
 
@@ -63,7 +72,7 @@ public class Utils {
 
     public String parseDateIntoString(String s) {
         String dateString = "20240313T100900Z";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX").withZone(java.time.ZoneId.of("UTC"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssX").withZone(ZoneId.of("UTC"));
         Instant instant = Instant.from(formatter.parse(dateString));
 
         System.out.println(instant);

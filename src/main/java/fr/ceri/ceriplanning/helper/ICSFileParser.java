@@ -1,6 +1,7 @@
-package fr.ceri.prototypeinterface.ceriplanning.helper;
+package fr.ceri.ceriplanning.helper;
 
-import fr.ceri.prototypeinterface.ceriplanning.model.Event;
+
+import fr.ceri.ceriplanning.model.Event;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static fr.ceri.prototypeinterface.ceriplanning.helper.Utils.getDescriptionDetailsFromHTML;
+import static fr.ceri.ceriplanning.helper.Utils.getDescriptionDetailsFromHTML;
 
 
 public class ICSFileParser {

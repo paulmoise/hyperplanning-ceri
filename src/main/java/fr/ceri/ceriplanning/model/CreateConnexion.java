@@ -1,4 +1,4 @@
-package fr.ceri.prototypeinterface.ceriplanning.model;
+package fr.ceri.ceriplanning.model;
 
 public class CreateConnexion {
     String name;

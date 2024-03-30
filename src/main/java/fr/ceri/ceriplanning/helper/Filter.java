@@ -1,12 +1,15 @@
-package fr.ceri.prototypeinterface.ceriplanning.helper;
+package fr.ceri.ceriplanning.helper;
 
-import fr.ceri.prototypeinterface.ceriplanning.model.Event;
 
-import java.time.LocalDateTime;
+
+
+
+import fr.ceri.ceriplanning.model.Event;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static fr.ceri.prototypeinterface.ceriplanning.helper.ICSFileParser.parseIcsFile;
+import static fr.ceri.ceriplanning.helper.ICSFileParser.parseIcsFile;
 
 public class Filter {
 
