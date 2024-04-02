@@ -6,11 +6,15 @@ import fr.ceri.ceriplanning.model.DescriptionDetails;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.IsoFields;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -139,6 +143,7 @@ public class Utils {
     }
 
 
+
     public static Map<String, Integer> generateTimeSlots(LocalTime startTime, LocalTime endTime, Duration slotDuration) {
         List<String> timeSlots = new ArrayList<>();
         LocalTime currentTime = startTime;
@@ -199,15 +204,40 @@ public class Utils {
         return monthMap.get(month);
     }
 
+    public static LocalDate getDateFromWeekAndDay(int year, int weekOfYear, int dayOfWeek) {
+        // Use the ISO-8601 standard; it can be adjusted for different locales
+        WeekFields weekFields = WeekFields.ISO;
+        TemporalField weekOfYearField = weekFields.weekOfWeekBasedYear();
+        TemporalField dayOfWeekField = weekFields.dayOfWeek();
+
+        // Start from the first day of the year
+        LocalDate date = LocalDate.of(year, 1, 1)
+          // Move to the first day of the first week (to handle years where the first week starts in the previous year)
+          .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()))
+          // Then, adjust to the desired week of the year
+          .with(weekOfYearField, weekOfYear)
+          // Finally, adjust to the desired day of the week
+          .with(dayOfWeekField, dayOfWeek);
+
+        return date;
+    }
+
     public static void main(String[] args) {
 //        Map<String, Integer> timeSlots = generateTimeSlots(LocalTime.of(8, 0), LocalTime.of(19, 0), Duration.ofMinutes(30));
 //        timeSlots.forEach((key, value) -> System.out.println(key + " => " + value));
+//
+//        String originalDate = "20231018T123000Z";
+//        LocalDateTime newDate = addOneHourToDate(originalDate);
+//        int n  = calculateNumberOf30MinIntervals(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+//        System.out.println("Original date: " + originalDate);
+//        System.out.println("New date after adding 1 hour: " + newDate);
+//        System.out.println("number of 30 min: " + n);
 
-        String originalDate = "20231018T123000Z";
-        LocalDateTime newDate = addOneHourToDate(originalDate);
-        int n  = calculateNumberOf30MinIntervals(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-        System.out.println("Original date: " + originalDate);
-        System.out.println("New date after adding 1 hour: " + newDate);
-        System.out.println("number of 30 min: " + n);
+        int year = 2024; // Example year
+        int weekOfYear = 13; // Example week of the year
+        int dayOfWeek = 3; // Example day of the week (Wednesday)
+
+        LocalDate date = getDateFromWeekAndDay(year, weekOfYear, dayOfWeek);
+        System.out.println("The date is: " + date);
     }
 }

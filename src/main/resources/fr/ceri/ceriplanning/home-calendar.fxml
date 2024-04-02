@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.Font?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.BreadCrumbBar?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.String?>
+<?import javafx.scene.control.TextField?>
 <VBox fx:id="vbRoot" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.HomeCalendarStudentController">
 
@@ -29,7 +32,7 @@
                 </padding>
                 <Button fx:id="btnFormation" alignment="BASELINE_LEFT" graphicTextGap="10.0"
                         prefWidth="125" mnemonicParsing="false"
-                        onAction="#handleBtnOnActionHome" prefHeight="30.0"
+                        onAction="#handleBtnOnActionFormation" prefHeight="30.0"
                         maxWidth="Infinity"
 
                         style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Formation"
@@ -42,7 +45,7 @@
                 <Button fx:id="btnSalle" alignment="BASELINE_LEFT" graphicTextGap="10.0"
                         prefWidth="125" mnemonicParsing="false"
                         maxWidth="Infinity"
-                        onAction="#handleBtnOnActionHome" prefHeight="30.0"
+                        onAction="#handleBtnOnActionSalle" prefHeight="30.0"
                         style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Salle"
                         textFill="#e7e5e5">
                     <graphic>
@@ -54,7 +57,7 @@
                 <Button fx:id="btnEnseignant" alignment="BASELINE_LEFT" graphicTextGap="10.0"
                         prefWidth="125" mnemonicParsing="false"
                         maxWidth="Infinity"
-                        onAction="#handleBtnOnActionHome" prefHeight="30.0"
+                        onAction="#handleBtnOnActionEnseignant" prefHeight="30.0"
                         style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Enseignant"
                         textFill="#e7e5e5">
                     <graphic>
@@ -65,7 +68,7 @@
                 <Button fx:id="btnMatiere" alignment="BASELINE_LEFT" graphicTextGap="10.0"
                         prefWidth="100" mnemonicParsing="false"
                         maxWidth="Infinity"
-                        onAction="#handleBtnOnActionHome" prefHeight="30.0"
+                        onAction="#handleBtnOnActionMatiere" prefHeight="30.0"
                         style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Matiere"
                         textFill="#e7e5e5">
                     <padding>
@@ -77,24 +80,23 @@
                 </Button>
             </HBox>
 
-            <HBox style="-fx-font-weight: bold; -fx-font-size: 15px;" alignment="TOP_CENTER" spacing="10">
+            <HBox fx:id="breadCrumbHBox" style="-fx-font-weight: bold; -fx-font-size: 15px;" alignment="TOP_CENTER" spacing="10">
                 <padding>
                     <Insets bottom="5.0" left="5.0" right="5.0" />
                 </padding>
-                <ComboBox fx:id="filterComboBox" layoutX="15.0" layoutY="33.0" prefWidth="250.0"
+                <BreadCrumbBar fx:id="sampleBreadCrumbBar">
+
+                </BreadCrumbBar>
+                <Region HBox.hgrow="ALWAYS"  prefWidth="5" maxWidth="Infinity" />
+
+                <TextField fx:id="filterComboBox" layoutX="15.0" layoutY="33.0" prefWidth="250.0"
                           promptText="Selectionner une formation">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="IA"/>
-                            <String fx:value="ILSEN"/>
-                            <String fx:value="SICOM"/>
-                        </FXCollections>
-                    </items>
-                </ComboBox>
+                </TextField>
 
                 <Button fx:id="btnSearch" alignment="BASELINE_LEFT" graphicTextGap="5.0"
                         prefWidth="120" mnemonicParsing="false"
                         maxWidth="Infinity"
+                        onAction="#handleBtnOnActionSearch"
                          prefHeight="30.0"
                          styleClass="btn, btn-success" text="Rechercher"
                         textFill="#e7e5e5">
@@ -102,6 +104,9 @@
                         <FontIcon iconColor="#fcf9f9" iconLiteral="fas-search" iconSize="10"/>
                     </graphic>
                 </Button>
+
+                <Region HBox.hgrow="ALWAYS"   maxWidth="Infinity" />
+
             </HBox>
 
             <HBox style="-fx-font-weight: bold; -fx-font-size: 15px;" alignment="TOP_CENTER" spacing="10">
@@ -129,14 +134,14 @@
                 <DatePicker id="datePicker" prefHeight="25.0" prefWidth="250.0" showWeekNumbers="true" >
 
                 </DatePicker>
-                <ComboBox fx:id="calendarTypeComboBox" layoutX="15.0" layoutY="33.0" prefWidth="100.0"
-                          value="Day">
+                <ComboBox fx:id="calendarTypeComboBox" layoutX="15.0" layoutY="33.0" prefWidth="150.0"
+                          value="Mois" onAction="#handleCalendarTypeComboBoxAction">
 
                     <items>
                         <FXCollections fx:factory="observableArrayList">
-                            <String fx:value="Day"/>
-                            <String fx:value="Week"/>
-                            <String fx:value="Month"/>
+                            <String fx:value="Jour"/>
+                            <String fx:value="Semaine"/>
+                            <String fx:value="Mois"/>
                         </FXCollections>
                     </items>
                 </ComboBox>
