@@ -222,6 +222,12 @@ public class Utils {
         return date;
     }
 
+    public static LocalDateTime getDateTimeFromYearMonthDay(int year, int month, int dayOfMonth) {
+        // Create a LocalDate object from the year, month, and day
+        LocalDate date = LocalDate.of(year, month, dayOfMonth);
+      return date.atStartOfDay();
+    }
+
     public static void main(String[] args) {
 //        Map<String, Integer> timeSlots = generateTimeSlots(LocalTime.of(8, 0), LocalTime.of(19, 0), Duration.ofMinutes(30));
 //        timeSlots.forEach((key, value) -> System.out.println(key + " => " + value));

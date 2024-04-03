@@ -113,15 +113,15 @@
                 <padding>
                     <Insets bottom="5.0" left="5.0" right="15.0" />
                 </padding>
-                <Button fx:id="prevButton" styleClass="btn-sm, btn-primary"   maxWidth="Infinity"  onAction="#onPrevWeek" >
+                <Button fx:id="prevButton" styleClass="btn-sm, btn-primary"   maxWidth="Infinity"  onAction="#onPrevButtonHandle" >
                     <graphic>
                         <FontIcon iconColor="#fcf9f9" iconLiteral="fas-chevron-left" iconSize="15"/>
                     </graphic>
                 </Button>
-                <Button fx:id="todayButton" styleClass="btn, btn-primary"   maxWidth="Infinity" text="Aujourd'hui"  onAction="#onToday" >
+                <Button fx:id="todayButton" styleClass="btn, btn-primary"   maxWidth="Infinity" text="Aujourd'hui"  onAction="#getBackToToDay" >
 
                 </Button>
-                <Button fx:id="nextButton" styleClass="btn-sm, btn-primary"   maxWidth="Infinity" onAction="#onNextWeek"  >
+                <Button fx:id="nextButton" styleClass="btn-sm, btn-primary"   maxWidth="Infinity" onAction="#onNextButtonHandle"  >
                     <graphic>
                         <FontIcon iconColor="#fcf9f9" iconLiteral="fas-chevron-right" iconSize="15"/>
                     </graphic>
@@ -135,7 +135,7 @@
 
                 </DatePicker>
                 <ComboBox fx:id="calendarTypeComboBox" layoutX="15.0" layoutY="33.0" prefWidth="150.0"
-                          value="Mois" onAction="#handleCalendarTypeComboBoxAction">
+                          value="Jour" onAction="#handleCalendarTypeComboBoxAction">
 
                     <items>
                         <FXCollections fx:factory="observableArrayList">
