@@ -25,7 +25,7 @@
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.MainViewController">
     <top>
-        <AnchorPane prefHeight="46.0" style="-fx-background-color: #000835;" >
+        <AnchorPane prefHeight="46.0" styleClass="header"   >
 
           <HBox alignment="CENTER" spacing="100"
                 AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0"

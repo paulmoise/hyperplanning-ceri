@@ -96,9 +96,6 @@ public class MainViewController {
     }
   }
 
-  public void handleBtnOnActionNewEvent(ActionEvent actionEvent) {
-
-  }
 
 
 
