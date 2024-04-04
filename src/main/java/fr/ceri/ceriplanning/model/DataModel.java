@@ -10,6 +10,8 @@ import static fr.ceri.ceriplanning.helper.ICSFileParser.parseIcsFile;
 
 public class DataModel {
 
+  private String activeUser;
+
   public void DataModel() {
   }
 
@@ -32,4 +34,11 @@ public class DataModel {
     return parseIcsFile(filePath);
   }
 
+  public String getActiveUser() {
+    return activeUser;
+  }
+
+  public void setActiveUser(String text) {
+    activeUser = text;
+  }
 }

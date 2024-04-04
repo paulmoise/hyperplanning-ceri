@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="fr.ceri.ceriplanning.LoginController">
+    <VBox alignment="CENTER" spacing="10">
+        <children>
+            <Label text="Nom d'utilisateur :" />
+            <TextField fx:id="usernameField" prefHeight="30.0" prefWidth="150.0" maxWidth="200.0" />
+            <Label text="Mot de passe :" />
+            <PasswordField fx:id="passwordField" prefHeight="30.0" prefWidth="150.0" maxWidth="200.0" />
+            <HBox spacing="10" prefHeight="30.0" prefWidth="150.0" maxWidth="200.0">
+                <CheckBox fx:id="studentCheckbox" text="Étudiant" />
+                <CheckBox fx:id="professorCheckbox" text="Professeur" />
+            </HBox>
+            <Button fx:id="loginButton" onAction="#handleLogin" text="Connexion" />
+            <Label fx:id="statusLabel" />
+        </children>
+        <padding>
+            <Insets top="40.0" right="40.0" bottom="40.0" left="40.0" />
+        </padding>
+    </VBox>
+</StackPane>

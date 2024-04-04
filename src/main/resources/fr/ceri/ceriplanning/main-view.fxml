@@ -50,7 +50,7 @@
                           <Image url="@icons/user.png"/>
                       </image>
                   </ImageView>
-                  <Label fx:id="lblUsername" text="Username" textFill="#e7e5e5" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0">
+                  <Label fx:id="activeUser"  textFill="#e7e5e5" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0">
                       <font>
                           <Font size="20.0"/>
                       </font>
@@ -81,7 +81,7 @@
 
                 <Button fx:id="btnAjouterEvent" alignment="BASELINE_LEFT" graphicTextGap="22.0"
                         VBox.vgrow="ALWAYS" maxWidth="Infinity" mnemonicParsing="false"
-                        onAction="#handleEventMangementButton" prefHeight="45.0"
+                        onAction="#handleEventManagementButton" prefHeight="45.0"
                         style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Evenements"
                         textFill="#e7e5e5">
                     <padding>

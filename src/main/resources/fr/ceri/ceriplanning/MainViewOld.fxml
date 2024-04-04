@@ -50,7 +50,7 @@
                         </Button>
                         <Button fx:id="btnOrders" alignment="BASELINE_LEFT" graphicTextGap="22.0"
                                 maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                                onAction="#handleEventMangementButton" prefHeight="55.0"
+                                onAction="#handleEventManagementButton" prefHeight="55.0"
                                 style="-fx-background-color: #05071F;" text="Orders" textFill="#e7e5e5">
                             <padding>
                                 <Insets left="60.0"/>

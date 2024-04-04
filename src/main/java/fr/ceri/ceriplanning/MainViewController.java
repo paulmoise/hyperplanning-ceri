@@ -6,12 +6,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
 public class MainViewController {
-
+  @FXML
+  public Label activeUser;
   @FXML
   private StackPane spSubScene;
   @FXML
@@ -21,7 +23,8 @@ public class MainViewController {
   private DataModel dataModel;
 
 
-  public void setSubSceneInitalNode() {
+  public void setSubSceneInitialNode() {
+    activeUser.setText(dataModel.getActiveUser());
     btnHome.fire();
   }
 
@@ -39,7 +42,7 @@ public class MainViewController {
     }
   }
 
-  public void handleEventMangementButton(ActionEvent actionEvent) {
+  public void handleEventManagementButton(ActionEvent actionEvent) {
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("events-management-view.fxml"));
       loader.load();
@@ -86,7 +89,7 @@ public class MainViewController {
       loader.load();
 
 
-      HomeCalendarStudentController  homeCalendarStudentController = loader.getController();
+      HomeCalendarStudentController homeCalendarStudentController = loader.getController();
       homeCalendarStudentController.initModel(dataModel);
 
       spSubScene.getChildren().clear();
@@ -95,8 +98,6 @@ public class MainViewController {
       System.out.println(ex.toString());
     }
   }
-
-
 
 
 }

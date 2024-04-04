@@ -111,6 +111,8 @@ public class HomeCalendarStudentController {
 
   public VBox getVBoxRoot() {
 
+    System.out.println("Active user: " + dataModel.getActiveUser());
+
     autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, formationList);
     addItemToBreadCrumbBar(selectedCalendarCategory);
     List<Event> events = dataModel.getEvents();
