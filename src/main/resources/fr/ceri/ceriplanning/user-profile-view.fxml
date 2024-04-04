@@ -8,10 +8,10 @@
 
 <?import javafx.scene.control.TextArea?>
 <VBox fx:id="vbRoot" alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.OverviewSubsceneController">
+      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.UserProfileController">
     <children>
-        <Label text="Settings Subscene" textFill="WHITE"/>
-        <Label text="Use Passed Data in ComboBox" textFill="WHITE"/>
+        <Label text="User profile" />
+        <Label text="User Profile" />
         <ComboBox fx:id="comboBox" prefWidth="150.0"/>
     </children>
     <TextArea fx:id="textArea" minHeight="200" minWidth="200" wrapText="true"

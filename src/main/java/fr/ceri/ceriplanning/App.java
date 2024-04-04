@@ -28,7 +28,7 @@ public class App extends Application {
   public void start(Stage stage) throws IOException {
     DataModel dataModel = new DataModel();
 
-    FXMLLoader rootLoader = new FXMLLoader(App.class.getResource("MainView.fxml"));
+    FXMLLoader rootLoader = new FXMLLoader(App.class.getResource("main-view.fxml"));
 
     rootLoader.load();
 

@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 
-public class OverviewSubsceneController {
+public class UserProfileController {
   private @FXML VBox vbRoot;
   private @FXML TextArea textArea;
 

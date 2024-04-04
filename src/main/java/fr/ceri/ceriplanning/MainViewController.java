@@ -5,25 +5,10 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalTime;
-import java.util.Map;
-
-import static fr.ceri.ceriplanning.helper.Utils.generateTimeSlots;
 
 public class MainViewController {
 
@@ -40,29 +25,29 @@ public class MainViewController {
     btnHome.fire();
   }
 
-  public void handleBtnOnActionOverview(ActionEvent actionEvent) {
+  public void handleBtnOnActionProfile(ActionEvent actionEvent) {
     try {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("OverviewSubscene.fxml"));
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("user-profile-view.fxml"));
       loader.load();
-      OverviewSubsceneController overviewSubsceneController = loader.getController();
-      overviewSubsceneController.initModel(dataModel);
+      UserProfileController userProfileController = loader.getController();
+      userProfileController.initModel(dataModel);
 
       spSubScene.getChildren().clear();
-      spSubScene.getChildren().add(overviewSubsceneController.getVBoxRoot());
+      spSubScene.getChildren().add(userProfileController.getVBoxRoot());
     } catch (IOException ex) {
       System.out.println(ex.toString());
     }
   }
 
-  public void handleBtnOnActionOrders(ActionEvent actionEvent) {
+  public void handleEventMangementButton(ActionEvent actionEvent) {
     try {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("OrdersSubscene.fxml"));
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("events-management-view.fxml"));
       loader.load();
-      OrdersSubseneController ordersSubseneController = loader.getController();
-      ordersSubseneController.initModel(dataModel);
+      EventsManagementController eventsManagementController = loader.getController();
+      eventsManagementController.initModel(dataModel);
 
       spSubScene.getChildren().clear();
-      spSubScene.getChildren().add(ordersSubseneController.getVBoxRoot());
+      spSubScene.getChildren().add(eventsManagementController.getVBoxRoot());
     } catch (IOException ex) {
       System.out.println(ex.toString());
     }
@@ -70,13 +55,13 @@ public class MainViewController {
 
   public void handleBtnOnActionSettings(ActionEvent actionEvent) {
     try {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("SettingsSubscene.fxml"));
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("settings-view.fxml"));
       loader.load();
-      SettingsSubsceneController settingsSubsceneController = loader.getController();
-      settingsSubsceneController.initModel(dataModel);
+      SettingsController settingsController = loader.getController();
+      settingsController.initModel(dataModel);
 
       spSubScene.getChildren().clear();
-      spSubScene.getChildren().add(settingsSubsceneController.getVBoxRoot());
+      spSubScene.getChildren().add(settingsController.getVBoxRoot());
     } catch (IOException ex) {
       System.out.println(ex.toString());
     }
@@ -115,7 +100,6 @@ public class MainViewController {
 
   }
 
-  public void handleBtnOnActionProfile(ActionEvent actionEvent) {
-  }
+
 
 }

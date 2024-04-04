@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
  *
  * @author blj0011
  */
-public class OrdersSubseneController {
+public class EventsManagementController {
 
   private @FXML VBox vbRoot;
   private @FXML ListView<String> listView;

@@ -89,8 +89,8 @@
                 </BreadCrumbBar>
                 <Region HBox.hgrow="ALWAYS"  prefWidth="5" maxWidth="Infinity" />
 
-                <TextField fx:id="filterComboBox" layoutX="15.0" layoutY="33.0" prefWidth="250.0"
-                          promptText="Selectionner une formation">
+                <TextField fx:id="filterAutocompleteTextField" layoutX="15.0" layoutY="33.0" prefWidth="250.0"
+                           promptText="Selectionner une formation">
                 </TextField>
 
                 <Button fx:id="btnSearch" alignment="BASELINE_LEFT" graphicTextGap="5.0"

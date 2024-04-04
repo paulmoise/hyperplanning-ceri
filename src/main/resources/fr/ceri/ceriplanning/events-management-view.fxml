@@ -6,10 +6,10 @@
 
 
 <VBox fx:id="vbRoot" alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.OrdersSubseneController">
+      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.EventsManagementController">
+
     <children>
-        <Label text="Orders Subscene" textFill="WHITE"/>
-        <Label text="Use Passed Data in ListView!" textFill="WHITE"/>
+        <Label text="Events managements" />
         <ListView fx:id="listView" prefHeight="200.0" prefWidth="200.0"/>
     </children>
     <padding>

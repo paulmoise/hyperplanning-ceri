@@ -7,10 +7,10 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="vbRoot" alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.SettingsSubsceneController">
+      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.SettingsController">
     <children>
-        <Label text="Settings Subscene" textFill="WHITE"/>
-        <Label text="Use Passed Data in ComboBox" textFill="WHITE"/>
+        <Label text="Settings Subscene" />
+        <Label text="Use Passed Data in ComboBox" />
         <ComboBox fx:id="comboBox" prefWidth="150.0"/>
     </children>
     <padding>

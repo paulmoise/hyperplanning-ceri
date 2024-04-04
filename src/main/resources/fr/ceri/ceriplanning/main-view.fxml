@@ -21,23 +21,47 @@
 <?import javafx.scene.control.CheckBox?>
 
 
+<?import javafx.scene.layout.Region?>
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.MainViewController">
     <top>
-        <AnchorPane prefHeight="46.0" style="-fx-background-color: #000835;">
-            <Button text="Rechercher" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="8.0"/>
-            <TextField fx:id="searchTextField" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="10.0"
-                       AnchorPane.rightAnchor="150.0" promptText="Entrez votre recherche ici"/>
-            <ImageView fitHeight="30.0" fitWidth="30.0" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0"
-                       pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@icons/burger.png"/>
-                </image>
-            </ImageView>
+        <AnchorPane prefHeight="46.0" style="-fx-background-color: #000835;" >
+
+          <HBox alignment="CENTER" spacing="100"
+                AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0"
+                AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
+              <padding>
+                  <Insets bottom="5.0" left="5.0" right="15.0" />
+              </padding>
+
+              <Label text="CERI Planning" textFill="#e7e5e5">
+                  <font>
+                      <Font size="20.0"/>
+                  </font>
+              </Label>
+
+              <Region HBox.hgrow="ALWAYS"  maxWidth="Infinity"/>
+              <HBox spacing="5" >
+                  <padding>
+                      <Insets top="10"/>
+                  </padding>
+                  <ImageView fitHeight="30.0" fitWidth="30.0"  pickOnBounds="true" preserveRatio="true">
+                      <image>
+                          <Image url="@icons/user.png"/>
+                      </image>
+                  </ImageView>
+                  <Label fx:id="lblUsername" text="Username" textFill="#e7e5e5" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0">
+                      <font>
+                          <Font size="20.0"/>
+                      </font>
+                  </Label>
+              </HBox>
+          </HBox>
+
         </AnchorPane>
     </top>
     <left>
-        <AnchorPane style="-fx-background-color: red;" >
+        <AnchorPane style="-fx-background-color:#05071F ;" >
             <VBox alignment="TOP_CENTER"  spacing="15.0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                 <padding>
                     <Insets top="10" left="5" right="5"/>
@@ -57,7 +81,7 @@
 
                 <Button fx:id="btnAjouterEvent" alignment="BASELINE_LEFT" graphicTextGap="22.0"
                         VBox.vgrow="ALWAYS" maxWidth="Infinity" mnemonicParsing="false"
-                        onAction="#handleBtnOnActionNewEvent" prefHeight="45.0"
+                        onAction="#handleEventMangementButton" prefHeight="45.0"
                         style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Evenements"
                         textFill="#e7e5e5">
                     <padding>

@@ -42,6 +42,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static fr.ceri.ceriplanning.helper.Utils.addOneHourToDate;
 import static fr.ceri.ceriplanning.helper.Utils.calculateNumberOf30MinIntervals;
@@ -69,7 +70,7 @@ public class HomeCalendarStudentController {
 
   @FXML
   public BreadCrumbBar<String> sampleBreadCrumbBar;
-  public TextField filterComboBox;
+  public TextField filterAutocompleteTextField;
 
   @FXML
   public ComboBox calendarTypeComboBox;
@@ -89,7 +90,6 @@ public class HomeCalendarStudentController {
   LocalDate todayDate = LocalDate.now();
 
 
-
   ZonedDateTime today = ZonedDateTime.now();
   ;
 
@@ -97,21 +97,21 @@ public class HomeCalendarStudentController {
     Arrays.asList("Amphi ada", "Amphi Blaise", "Stat 7 = Info - C 128", "Stat 5 = Info - C 130", "S2 = C 040", "Stat 6 = Info - C 129",
       "Stat 1 = Info - C 137"));
 
-  List<String> formationList = new ArrayList<>(Arrays.asList("M1-IA-ALT", "M1 INTEL", "M1-IA-CLA", "SICOM"));
+  List<String> formationList = new ArrayList<>(Arrays.asList("M1-IA-IL-ALT", "M1 INTEL", "M1-IA-IL-CLA", "SICOM"));
 
   List<String> matiereList = new ArrayList<>(
     Arrays.asList("MODELES STOCHASTIQUES", "PROTOTYPAGE INTERFACE", "APPLICATION IA", "APPROCHE NEURONALES", "PROCCESUS STOCHASTIQUES",
       "ANGLAIS"));
 
   List<String> enseignantList = new ArrayList<>(
-    Arrays.asList("RODIN Lilian", "HUET Stephane", "BONNEFOY Ludovic", "ESTEVE Yannick", "CECILLON Noe", "Salas Daniel"));
+    Arrays.asList("RONDIN Lilian", "HUET Stephane", "BONNEFOY Ludovic", "ESTEVE Yannick", "CECILLON Noe", "Salas Daniel"));
 
 
   TreeItem<String> homeItem = BreadCrumbBar.buildTreeModel("Home");
 
   public VBox getVBoxRoot() {
 
-    autoCompletionBinding = TextFields.bindAutoCompletion(filterComboBox, formationList);
+    autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, formationList);
     addItemToBreadCrumbBar(selectedCalendarCategory);
     List<Event> events = dataModel.getEvents();
 
@@ -183,7 +183,7 @@ public class HomeCalendarStudentController {
 
     String headerWeekTitleStyle = "-fx-font-weight: bold; -fx-font-size: 15px;";
 
-    Label monday = getLabelForWeekCalendar(1,"Lundi");
+    Label monday = getLabelForWeekCalendar(1, "Lundi");
     monday.setStyle(headerWeekTitleStyle);
     StackPane mondayPane = new StackPane(monday);
     mondayPane.setAlignment(Pos.CENTER);
@@ -243,7 +243,6 @@ public class HomeCalendarStudentController {
     column6.setPrefWidth(2 * smallSize);
 
 
-
     RowConstraints rowContrainConstraints = new RowConstraints(50);
     gridPane.getRowConstraints().add(rowContrainConstraints);
 
@@ -292,7 +291,7 @@ public class HomeCalendarStudentController {
     int weekOfYear = todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear());
     LocalDate date = getDateFromWeekAndDay(todayDate.getYear(), weekOfYear, dayOfWeek);
 
-    return new Label(dayName+ " " +date.getDayOfMonth() );
+    return new Label(dayName + " " + date.getDayOfMonth());
   }
 
   private Button createEventAsButton() {
@@ -398,7 +397,7 @@ public class HomeCalendarStudentController {
     String capitalizedMonthName = monthName.substring(0, 1).toUpperCase() + monthName.substring(1).toLowerCase();
     String dayName = todayDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.FRANCE);
     String capitalizedDayName = dayName.substring(0, 1).toUpperCase() + dayName.substring(1).toLowerCase();
-    return capitalizedDayName + " " +todayDate.getDayOfMonth();
+    return capitalizedDayName + " " + todayDate.getDayOfMonth();
   }
 
 
@@ -496,11 +495,11 @@ public class HomeCalendarStudentController {
 
         int calculatedDate = (col + 1) + (7 * (row - 1));
         System.out.println("Calculated date: " + calculatedDate + " Month max date: " + monthMaxDate + " Date offset: " + dateOffset);
-        System.out.println( "col = "+col + " row = " + row);
+        System.out.println("col = " + col + " row = " + row);
 
         int correctedRow = row;
-        if (dateOffset == 7){
-         correctedRow = row - 1;
+        if (dateOffset == 7) {
+          correctedRow = row - 1;
         }
 
 
@@ -857,7 +856,7 @@ public class HomeCalendarStudentController {
     selectedCalendarCategory = "Enseignant";
     addItemToBreadCrumbBar(selectedCalendarCategory);
     autoCompletionBinding.dispose();
-    autoCompletionBinding = TextFields.bindAutoCompletion(filterComboBox, enseignantList);
+    autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, enseignantList);
 
   }
 
@@ -866,7 +865,7 @@ public class HomeCalendarStudentController {
     selectedCalendarCategory = "Matiere";
     addItemToBreadCrumbBar(selectedCalendarCategory);
     autoCompletionBinding.dispose();
-    autoCompletionBinding = TextFields.bindAutoCompletion(filterComboBox, matiereList);
+    autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, matiereList);
   }
 
   public void handleBtnOnActionSalle(ActionEvent actionEvent) {
@@ -874,7 +873,7 @@ public class HomeCalendarStudentController {
     selectedCalendarCategory = "Salle";
     addItemToBreadCrumbBar(selectedCalendarCategory);
     autoCompletionBinding.dispose();
-    autoCompletionBinding = TextFields.bindAutoCompletion(filterComboBox, salleList);
+    autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, salleList);
   }
 
   public void handleBtnOnActionFormation(ActionEvent actionEvent) {
@@ -883,11 +882,67 @@ public class HomeCalendarStudentController {
     selectedCalendarCategory = "Formation";
     addItemToBreadCrumbBar(selectedCalendarCategory);
     autoCompletionBinding.dispose();
-    autoCompletionBinding = TextFields.bindAutoCompletion(filterComboBox, formationList);
+    autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, formationList);
   }
 
   public void handleBtnOnActionSearch(ActionEvent actionEvent) {
-    System.out.println("Search button clicked " + filterComboBox.getText());
+
+
+    System.out.println("Search button clicked");
+    String filterText = filterAutocompleteTextField.getText().toLowerCase();
+
+    List<Event> filteredEvents = new ArrayList<>();
+    List<Event> events = dataModel.getEvents();
+    observableEvents.clear();
+    if (selectedCalendarCategory.equals("Formation")) {
+      filteredEvents = events
+        .stream()
+        .filter(event ->
+          isValidDateFormat(event.getDtStart()) &&
+            isValidDateFormat(event.getDtEnd()) &&
+            isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),
+              todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
+            event.getDescriptionDetails().getTd() != null &&
+            event.getDescriptionDetails().getTd().toLowerCase().contains(filterText))
+        .collect(Collectors.toList());
+
+    } else if (selectedCalendarCategory.equals("Matiere")) {
+      filteredEvents = events
+        .stream()
+        .filter(event ->
+          isValidDateFormat(event.getDtStart()) &&
+            isValidDateFormat(event.getDtEnd()) &&
+            isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),
+              todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
+            event.getDescriptionDetails().getMatiere() != null &&
+            event.getDescriptionDetails().getMatiere().toLowerCase().contains(filterText))
+        .collect(Collectors.toList());
+    } else if (selectedCalendarCategory.equals("Salle")) {
+      filteredEvents = events
+        .stream()
+        .filter(event ->
+          isValidDateFormat(event.getDtStart()) &&
+            isValidDateFormat(event.getDtEnd()) &&
+            isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
+            event.getDescriptionDetails().getSalle() != null &&
+            event.getDescriptionDetails().getSalle().toLowerCase().contains(filterText)
+
+        )
+        .collect(Collectors.toList());
+    } else if (selectedCalendarCategory.equals("Enseignant")) {
+      filteredEvents = events
+        .stream()
+        .filter(event ->
+          isValidDateFormat(event.getDtStart()) &&
+            isValidDateFormat(event.getDtEnd()) &&
+            isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
+          event.getDescriptionDetails().getEnseignant() != null &&
+          event.getDescriptionDetails().getEnseignant().toLowerCase().contains(filterText))
+        .collect(Collectors.toList());
+
+    }
+
+    observableEvents.addAll(filteredEvents);
   }
 
   public void handleCalendarTypeComboBoxAction(ActionEvent actionEvent) {
