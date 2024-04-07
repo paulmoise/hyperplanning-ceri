@@ -76,7 +76,6 @@ public class LoginController {
   void switchToAcueil(ActionEvent event) {
 
     DataModel dataModel = new DataModel();
-    System.out.println("DataModel created "+ dataModel.getActiveUser());
 
     // a utiliser pour gerer le mode sombre et le mode clair
     URL darkModeStyle = getClass().getResource("css/dark-mode-style.css");
@@ -101,7 +100,6 @@ public class LoginController {
       scene.getStylesheets().add(Objects.requireNonNull(darkModeStyle).toExternalForm());
 
       Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-      stage.setTitle("CERI Planning");
 
       // Remplacer la scène actuelle par la nouvelle scène
       stage.setScene(scene);

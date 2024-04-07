@@ -10,7 +10,13 @@ import static fr.ceri.ceriplanning.helper.ICSFileParser.parseIcsFile;
 
 public class DataModel {
 
-  public User activeUser;
+  private String activeUser;
+  public List<Event> allEvents =new ArrayList<>();
+
+
+  public DataModel() {
+    if (allEvents.isEmpty()) allEvents =parseIcsFile( "data/calendar.ics");
+  }
 
   public void DataModel() {
     activeUser = new User();
@@ -30,10 +36,17 @@ public class DataModel {
 
   public List<Event> getEvents() {
 
-    String filePath = "data/new_calendar.ics";
-    return parseIcsFile(filePath);
+    /*String filePath = "data/calendar.ics";
+    return parseIcsFile(filePath);*/
+    return this.allEvents;
   }
+  public List<Event> addEvent(Event e){
+   this.allEvents.add(e);
+   ;
+    return this.allEvents;
 
+  }
+  public String getActiveUser() {
   public User getActiveUser() {
     return activeUser;
   }

@@ -1,0 +1,59 @@
+/* styles.css */
+
+/* Style du conteneur principal */
+#vbRoot {
+    -fx-background-color: #f0f0f0; /* Couleur de fond */
+    -fx-padding: 20px; /* Espacement intérieur */
+}
+
+/* Style des boutons */
+.custom-button {
+    -fx-background-color: #4CAF50; /* Couleur de fond */
+    -fx-text-fill: white; /* Couleur du texte */
+    -fx-font-size: 14px; /* Taille de la police */
+    -fx-padding: 10px 20px; /* Espacement intérieur */
+    -fx-background-radius: 5px; /* Bordure arrondie */
+    -fx-border-radius: 5px; /* Bordure arrondie */
+    -fx-border-color: transparent; /* Couleur de la bordure */
+    -fx-cursor: pointer; /* Curseur au survol */
+}
+
+.custom-button:hover {
+    -fx-background-color: #45a049; /* Couleur de fond au survol */
+}
+
+/* Style du bouton de validation */
+.validation-button {
+    -fx-background-color: #007bff; /* Nouvelle couleur de fond */
+    -fx-text-fill: white; /* Couleur du texte */
+    -fx-font-size: 14px; /* Taille de la police */
+    -fx-padding: 10px 20px; /* Espacement intérieur */
+    -fx-background-radius: 5px; /* Bordure arrondie */
+    -fx-border-radius: 5px; /* Bordure arrondie */
+    -fx-border-color: transparent; /* Couleur de la bordure */
+    -fx-cursor: pointer; /* Curseur au survol */
+}
+
+.validation-button:hover {
+    -fx-background-color: #0056b3; /* Nouvelle couleur de fond au survol */
+}
+
+/* Style des ComboBox */
+.combo-box {
+    -fx-font-size: 14px; /* Taille de la police */
+    -fx-padding: 5px; /* Espacement intérieur */
+    -fx-background-color: #ADD8E6; /* Couleur de fond bleu clair */
+}
+
+.label {
+    -fx-font-size: 14px; /* Taille de la police */
+    -fx-text-fill: #333333; /* Couleur du texte */
+    -fx-font-family: "Arial"; /* Police de caractères */
+    -fx-font-weight: bold; /* Gras */
+    -fx-padding: 5px; /* Espacement intérieur */
+}
+
+/* Style des espaces entre les éléments */
+.spacing {
+    -fx-spacing: 10px; /* Espacement entre les éléments */
+}
