@@ -24,7 +24,7 @@ public class MainViewController {
 
 
   public void setSubSceneInitialNode() {
-    activeUser.setText(dataModel.getActiveUser());
+    activeUser.setText(dataModel.getActiveUser().getUsername());
     btnHome.fire();
   }
 

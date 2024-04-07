@@ -1,3 +1,74 @@
 .header{
     -fx-background-color: #000835;
 }
+
+.header-button{
+    -fx-background-color: #05071F;
+    -fx-start-margin: 5px;
+    -fx-text-fill: #e7e5e5;
+}
+.panel{
+    -fx-font-size:11px;
+}
+.panel-primary, .panel-danger, .panel-heading {
+    -fx-border-radius: 2 2 2 2;
+    -fx-background-radius: 2 2 2 2;
+}
+
+.panel-primary {
+    -fx-background-color: #d9edf7; /* Light blue background */
+}
+
+.panel-danger {
+    -fx-background-color: #f2dede; /* Light red background for 'Evaluation' type events */
+}
+
+.panel-body{
+    -fx-padding: 2px;
+}
+
+.panel-heading{
+    -fx-padding: 2px;
+
+}
+
+.card {
+    -fx-padding: 1px;
+    -fx-background-color: #17a2b8; /* Light blue background for the card */
+    -fx-border-color: #17a2b8;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 2, 0, 0, 2);
+    -fx-spacing: 2px; /* Spacing between child elements */
+    -fx-text-fill: #e7e5e5; /* White text for all child elements */
+}
+
+.card-header {
+    -fx-background-color: #117a8b; /* Darker blue for the header */
+    -fx-padding: 2px;
+    -fx-text-fill:#e7e5e5; /* White text */
+    -fx-font-weight: bold;
+    -fx-background-radius: 2px 2px 0 0; /* Only round the top corners */
+}
+
+.card-content {
+    -fx-padding: 2px;
+    -fx-background-color: #17a2b8; /* Same color as the card for the content area */
+    -fx-text-fill: #e7e5e5; /* White text */
+}
+
+
+
+
+/*.header-button:focused{*/
+/*    -fx-background-color: red;*/
+/*    -fx-text-fill: #fff;*/
+/*}*/
+
+/*.header-button:selected {*/
+/*    -fx-background-color: green ;*/
+/*}*/
+
+/*.header-button:selected:focused {*/
+/*    -fx-background-color: yellow;*/
+/*}*/

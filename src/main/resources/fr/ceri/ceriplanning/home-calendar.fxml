@@ -15,95 +15,98 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import java.lang.String?>
 <?import javafx.scene.control.TextField?>
+<?import org.controlsfx.control.SearchableComboBox?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
 <VBox fx:id="vbRoot" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.HomeCalendarStudentController">
 
 
     <AnchorPane  style="-fx-background-color:#f8f8ff;" >
         <padding>
-            <Insets bottom="10.0" />
+            <Insets bottom="5.0"  />
         </padding>
-        <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
-              AnchorPane.rightAnchor="0">
+        <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" styleClass="panel, panel-primary">
 
-            <HBox alignment="TOP_CENTER" spacing="10.0" >
+            <HBox alignment="TOP_CENTER" spacing="10.0"  styleClass="panel-heading">
                 <padding>
-                    <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="10.0"/>
                 </padding>
-                <Button fx:id="btnFormation" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                <fx:define>
+                    <ToggleGroup fx:id="headerButtonGroup"/>
+                </fx:define>
+                <ToggleButton fx:id="btnFormation" alignment="BASELINE_LEFT" graphicTextGap="10.0" styleClass="header-button" toggleGroup="$headerButtonGroup"
                         prefWidth="125" mnemonicParsing="false"
                         onAction="#handleBtnOnActionFormation" prefHeight="30.0"
                         maxWidth="Infinity"
-
-                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Formation"
-                        textFill="#e7e5e5">
+                        text="Formation">
                     <graphic>
                         <FontIcon iconColor="#fcf9f9" iconLiteral="fas-graduation-cap" iconSize="15"/>
                     </graphic>
-                </Button>
+                </ToggleButton>
 
-                <Button fx:id="btnSalle" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                <ToggleButton fx:id="btnSalle" alignment="BASELINE_LEFT" graphicTextGap="10.0" styleClass="header-button" toggleGroup="$headerButtonGroup"
                         prefWidth="125" mnemonicParsing="false"
                         maxWidth="Infinity"
-                        onAction="#handleBtnOnActionSalle" prefHeight="30.0"
-                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Salle"
-                        textFill="#e7e5e5">
+                        onAction="#handleBtnOnActionSalle" prefHeight="30.0" text="Salle">
                     <graphic>
                         <FontIcon iconColor="#fcf9f9" iconLiteral="fas-home" iconSize="15"/>
                     </graphic>
-                </Button>
+                </ToggleButton>
 
 
-                <Button fx:id="btnEnseignant" alignment="BASELINE_LEFT" graphicTextGap="10.0"
+                <ToggleButton fx:id="btnEnseignant" alignment="BASELINE_LEFT" graphicTextGap="10.0" styleClass="header-button" toggleGroup="$headerButtonGroup"
                         prefWidth="125" mnemonicParsing="false"
                         maxWidth="Infinity"
-                        onAction="#handleBtnOnActionEnseignant" prefHeight="30.0"
-                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Enseignant"
-                        textFill="#e7e5e5">
+                        onAction="#handleBtnOnActionEnseignant" prefHeight="30.0" text="Enseignant">
                     <graphic>
                         <FontIcon iconColor="#fcf9f9" iconLiteral="fas-user-secret" iconSize="15"/>
                     </graphic>
-                </Button>
+                </ToggleButton>
 
-                <Button fx:id="btnMatiere" alignment="BASELINE_LEFT" graphicTextGap="10.0"
-                        prefWidth="100" mnemonicParsing="false"
-                        maxWidth="Infinity"
-                        onAction="#handleBtnOnActionMatiere" prefHeight="30.0"
-                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Matiere"
-                        textFill="#e7e5e5">
-                    <padding>
+<!--                <ToggleButton fx:id="btnMatiere" alignment="BASELINE_LEFT" graphicTextGap="10.0" styleClass="header-button"  toggleGroup="$headerButtonGroup"-->
+<!--                        prefWidth="100" mnemonicParsing="false"-->
+<!--                        maxWidth="Infinity"-->
+<!--                        onAction="#handleBtnOnActionMatiere" prefHeight="30.0"-->
+<!--                         text="Matiere">-->
+<!--                    <padding>-->
 
-                    </padding>
-                    <graphic>
-                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-book" iconSize="15"/>
-                    </graphic>
-                </Button>
+<!--                    </padding>-->
+<!--                    <graphic>-->
+<!--                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-book" iconSize="15"/>-->
+<!--                    </graphic>-->
+<!--                </ToggleButton>-->
             </HBox>
 
-            <HBox fx:id="breadCrumbHBox" style="-fx-font-weight: bold; -fx-font-size: 15px;" alignment="TOP_CENTER" spacing="10">
-                <padding>
-                    <Insets bottom="5.0" left="5.0" right="5.0" />
-                </padding>
-                <BreadCrumbBar fx:id="sampleBreadCrumbBar">
+            <HBox  style="-fx-font-weight: bold; -fx-font-size: 15px;" alignment="CENTER">
+                    <Label fx:id="searchCategoryType" text="Rechercher un emploi du temps par Formation" />
+            </HBox>
 
-                </BreadCrumbBar>
+            <HBox fx:id="breadCrumbHBox" style="-fx-font-weight: bold; -fx-font-size: 15px;" alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="10"/>
+                </padding>
+
                 <Region HBox.hgrow="ALWAYS"  prefWidth="5" maxWidth="Infinity" />
 
-                <TextField fx:id="filterAutocompleteTextField" layoutX="15.0" layoutY="33.0" prefWidth="250.0"
-                           promptText="Selectionner une formation">
-                </TextField>
+                <HBox  alignment="CENTER" spacing="10">
+                    <TextField fx:id="filterAutocompleteTextField" layoutX="15.0" layoutY="33.0" prefWidth="250.0"
+                               promptText="Selectionner une formation">
+                    </TextField>
+                    <Button fx:id="btnSearch" alignment="BASELINE_LEFT" graphicTextGap="5.0"
+                            prefWidth="120" mnemonicParsing="false"
+                            maxWidth="Infinity"
+                            onAction="#handleBtnOnActionSearch"
+                            prefHeight="30.0"
+                            styleClass="btn, btn-success" text="Rechercher"
+                            textFill="#e7e5e5">
+                        <graphic>
+                            <FontIcon iconColor="#fcf9f9" iconLiteral="fas-search" iconSize="10"/>
+                        </graphic>
+                    </Button>
+                </HBox>
 
-                <Button fx:id="btnSearch" alignment="BASELINE_LEFT" graphicTextGap="5.0"
-                        prefWidth="120" mnemonicParsing="false"
-                        maxWidth="Infinity"
-                        onAction="#handleBtnOnActionSearch"
-                         prefHeight="30.0"
-                         styleClass="btn, btn-success" text="Rechercher"
-                        textFill="#e7e5e5">
-                    <graphic>
-                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-search" iconSize="10"/>
-                    </graphic>
-                </Button>
 
                 <Region HBox.hgrow="ALWAYS"   maxWidth="Infinity" />
 
@@ -127,16 +130,38 @@
                     </graphic>
                 </Button>
 
-                <Label fx:id="activeMonth" prefWidth="100" maxWidth="Infinity" prefHeight="30" styleClass="lbl, lbl-default" text="Mars 2024"/>
+                <Region HBox.hgrow="ALWAYS"   prefWidth="5" maxWidth="Infinity" />
+
+                <Label  maxWidth="Infinity" prefHeight="30"  text="Filtrer par"/>
+
+                <ComboBox fx:id="filterBy" layoutX="15.0" layoutY="33.0" prefWidth="150.0" prefHeight="30"
+                           onAction="#handleFilterByAction">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Matiere"/>
+                            <String fx:value="Groupe"/>
+                            <String fx:value="Type"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <SearchableComboBox fx:id="filterByOption" layoutX="15.0" layoutY="33.0" prefWidth="200.0" maxWidth="Infinity"
+                                    onAction="#handleBnOnActionFilterOption">
+                </SearchableComboBox>
+                <Button fx:id="clearFilter" styleClass="btn, btn-sm, btn-danger"   maxWidth="Infinity"  onAction="#onClearFilterButton"
+                text="Clear">
+                </Button>
+                <Region HBox.hgrow="ALWAYS"  prefWidth="5" maxWidth="Infinity" />
+
+                <Label fx:id="activeMonth" prefWidth="200" maxWidth="Infinity" prefHeight="30" styleClass="lbl, lbl-default"/>
 
                 <Region HBox.hgrow="ALWAYS"  prefWidth="5" maxWidth="Infinity" />
 
-                <DatePicker id="datePicker" prefHeight="25.0" prefWidth="250.0" showWeekNumbers="true" >
+<!--                <DatePicker id="datePicker" prefHeight="25.0" prefWidth="250.0" showWeekNumbers="true" >-->
 
-                </DatePicker>
+<!--                </DatePicker>-->
                 <ComboBox fx:id="calendarTypeComboBox" layoutX="15.0" layoutY="33.0" prefWidth="150.0"
                           value="Jour" onAction="#handleCalendarTypeComboBoxAction">
-
                     <items>
                         <FXCollections fx:factory="observableArrayList">
                             <String fx:value="Jour"/>

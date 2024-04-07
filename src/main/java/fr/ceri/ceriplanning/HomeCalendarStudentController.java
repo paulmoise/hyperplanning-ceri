@@ -2,6 +2,7 @@ package fr.ceri.ceriplanning;
 
 import fr.ceri.ceriplanning.model.DataModel;
 import fr.ceri.ceriplanning.model.Event;
+import fr.ceri.ceriplanning.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -11,9 +12,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -24,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import org.controlsfx.control.BreadCrumbBar;
+import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -39,6 +42,7 @@ import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -51,6 +55,10 @@ import static fr.ceri.ceriplanning.helper.Utils.generateTimeSlots;
 import static fr.ceri.ceriplanning.helper.Utils.getDateFromWeekAndDay;
 import static fr.ceri.ceriplanning.helper.Utils.getDateTimeFromYearMonthDay;
 import static fr.ceri.ceriplanning.helper.Utils.getDayOfWeek;
+import static fr.ceri.ceriplanning.helper.Utils.getListGroupPedagogic;
+import static fr.ceri.ceriplanning.helper.Utils.getListSalle;
+import static fr.ceri.ceriplanning.helper.Utils.getListTypeCours;
+import static fr.ceri.ceriplanning.helper.Utils.getMatiereList;
 import static fr.ceri.ceriplanning.helper.Utils.getMonthFromWeek;
 import static fr.ceri.ceriplanning.helper.Utils.isActiveWeekOfYearEqualToEventStartWeekOfYear;
 import static fr.ceri.ceriplanning.helper.Utils.isValidDateFormat;
@@ -70,10 +78,19 @@ public class HomeCalendarStudentController {
 
   @FXML
   public BreadCrumbBar<String> sampleBreadCrumbBar;
+
+  @FXML
   public TextField filterAutocompleteTextField;
 
   @FXML
-  public ComboBox calendarTypeComboBox;
+  public ComboBox<String> calendarTypeComboBox;
+
+  @FXML
+  public ComboBox<String> filterBy;
+  public SearchableComboBox<String> filterByOption;
+
+  @FXML
+  public Label searchCategoryType;
 
   // get the root VBox for this controller
   private @FXML VBox vbRoot;
@@ -81,7 +98,10 @@ public class HomeCalendarStudentController {
   private DataModel dataModel;
 
   private String selectedCalendarCategory = "Formation";
+
+  private List<Event> userEvents = new ArrayList<>();
   private ObservableList<Event> observableEvents = FXCollections.observableArrayList();
+
   Map<String, Integer> timeSlots = generateTimeSlots(LocalTime.of(8, 0), LocalTime.of(19, 0), Duration.ofMinutes(30));
 
 
@@ -91,13 +111,9 @@ public class HomeCalendarStudentController {
 
 
   ZonedDateTime today = ZonedDateTime.now();
-  ;
 
-  List<String> salleList = new ArrayList<>(
-    Arrays.asList("Amphi ada", "Amphi Blaise", "Stat 7 = Info - C 128", "Stat 5 = Info - C 130", "S2 = C 040", "Stat 6 = Info - C 129",
-      "Stat 1 = Info - C 137"));
 
-  List<String> formationList = new ArrayList<>(Arrays.asList("M1-IA-IL-ALT", "M1 INTEL", "M1-IA-IL-CLA", "SICOM"));
+  List<String> formationList = new ArrayList<>(Arrays.asList("M1 IA", "M1 ILSEN", "M1 SICOM", "L3-INFORMATIQUE"));
 
   List<String> matiereList = new ArrayList<>(
     Arrays.asList("MODELES STOCHASTIQUES", "PROTOTYPAGE INTERFACE", "APPLICATION IA", "APPROCHE NEURONALES", "PROCCESUS STOCHASTIQUES",
@@ -107,19 +123,56 @@ public class HomeCalendarStudentController {
     Arrays.asList("RONDIN Lilian", "HUET Stephane", "BONNEFOY Ludovic", "ESTEVE Yannick", "CECILLON Noe", "Salas Daniel"));
 
 
-  TreeItem<String> homeItem = BreadCrumbBar.buildTreeModel("Home");
-
   public VBox getVBoxRoot() {
 
-    System.out.println("Active user: " + dataModel.getActiveUser());
+    //initialize active user events
+    userEvents = getEventsBasedOnUserProfile(dataModel.getActiveUser(), dataModel.getEvents());
 
+    System.out.println("Active username: " + dataModel.getActiveUser().getUsername());
+    System.out.println("Active formation: " + dataModel.getActiveUser().getFormation());
+
+    // initialize the active month label
+    String monthName = todayDate.getMonth().getDisplayName(TextStyle.FULL, Locale.FRANCE);
+    String capitalizedMonthName = monthName.substring(0, 1).toUpperCase() + monthName.substring(1).toLowerCase();
+    activeMonth.setText(capitalizedMonthName + " " + todayDate.getYear());
+
+
+    // initialize the search bar with the default value as Formation
     autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, formationList);
-    addItemToBreadCrumbBar(selectedCalendarCategory);
-    List<Event> events = dataModel.getEvents();
 
+
+    // display day calendar by default
     displayDayCalendarGridPane();
-    applyFilterToListOfAllEventsForDayCalendar(events);
+    // First level of filter
+    applyFilterBasedOnUserProfile();
+    // display default events on the day calendar
+    applyFilterForDayCalendar(new ArrayList<>(observableEvents));
+    // display default events on the day calendar
     displayEventOnDayCalendarGridPane(new ArrayList<>(observableEvents));
+
+
+    calendarTypeComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+
+      if (calendarTypeComboBox.getValue().equals("Jour")) {
+        calendarContentHBox.getChildren().remove(0);
+        displayDayCalendarGridPane();
+        applyFilterToListOfAllEventsForDayCalendar(userEvents);
+      } else if (calendarTypeComboBox.getValue().equals("Semaine")) {
+        calendarContentHBox.getChildren().remove(0);
+        displayWeekCalendarGridPane();
+        int weekOfYear = todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear());
+        applyFilterForEventInActiveWeek(weekOfYear, userEvents);
+      } else {
+        calendarContentHBox.getChildren().remove(0);
+        displayMonthCalendarGridPane();
+        displayEventOnMonthCalendarGridPane();
+      }
+    });
+
+    // add event on filterBy combo box change
+    filterBy.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+      handleBtnOnActionSearch(null);
+    });
 
 
     observableEvents.addListener((ListChangeListener.Change<? extends Event> change) -> {
@@ -145,20 +198,24 @@ public class HomeCalendarStudentController {
   }
 
 
-  // Method to add an item to the breadcrumb bar
-  public void addItemToBreadCrumbBar(String newItem) {
-    TreeItem<String> newItemTree = new TreeItem<>(newItem);
-    homeItem.getChildren().add(newItemTree);
-    sampleBreadCrumbBar.setSelectedCrumb(newItemTree); // Update the breadcrumb bar to reflect the addition
+  private List<Event> getEventsBasedOnUserProfile(User activeUser, List<Event> events) {
+    List<Event> filteredEvent = new ArrayList<>();
+    for (Event event : events) {
+      if (event.getDescriptionDetails().getTd() != null &&
+        (event.getDescriptionDetails().getTd().contains("IA") ||
+          event.getDescriptionDetails().getTd().contains("M1 INTEL") ||
+          event.getDescriptionDetails().getTd().contains(activeUser.getFormation()))) {
+        {
+          filteredEvent.add(event);
+        }
+      }
+    }
+    return filteredEvent;
   }
 
-
-  public void removeItemFromBreadCrumbBar(String itemName) {
-    TreeItem<String> itemToRemove = BreadCrumbBar.buildTreeModel(itemName);
-    if (itemToRemove.getParent() != null) {
-      itemToRemove.getParent().getChildren().remove(itemToRemove);
-      sampleBreadCrumbBar.setSelectedCrumb(itemToRemove.getParent());
-    }
+  private void applyFilterBasedOnUserProfile() {
+    observableEvents.clear();
+    observableEvents.addAll(userEvents);
   }
 
 
@@ -221,9 +278,8 @@ public class HomeCalendarStudentController {
     dropShadow.setOffsetY(5.0);
     dropShadow.setRadius(10.0);
 
-
-    gridPane.setVgap(0.5);
-
+    // set vertical space
+    gridPane.setVgap(1);
     gridPane.setPadding(new Insets(10, 10, 10, 10));
 
 
@@ -245,13 +301,19 @@ public class HomeCalendarStudentController {
     column6.setPrefWidth(2 * smallSize);
 
 
-    RowConstraints rowContrainConstraints = new RowConstraints(50);
-    gridPane.getRowConstraints().add(rowContrainConstraints);
-
+    int numberOfRows = 24;
+    double totalHeight = 500;
+    double rowHeight = totalHeight / numberOfRows;
+    for (int row = 0; row < numberOfRows; row++) {
+      RowConstraints rowConstraints = new RowConstraints();
+      rowConstraints.setMinHeight(rowHeight); // Use the calculated height
+      rowConstraints.setPrefHeight(rowHeight); // Use the calculated height for preferred height as well
+      gridPane.getRowConstraints().add(rowConstraints);
+    }
 
     for (int col = 0; col < 6; col++) {
       for (int row = 1; row < 24; row++) {
-        if (col == 0) {
+        if (col == 0 && row % 2 != 0) {
           Label slot = new Label(timeSlots.keySet().toArray()[row - 1].toString());
           slot.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
           StackPane slotPane = new StackPane(slot);
@@ -260,16 +322,14 @@ public class HomeCalendarStudentController {
             "-fx-border-width: 1; " +
             "-fx-border-style: dashed;"
           );
+//          slotPane.getStyleClass().add("panel-body");
           slotPane.setAlignment(Pos.CENTER); // Center the label within the stack pane
           gridPane.add(slotPane, col, row);
 
         } else {
           Button button = createEventAsButton();
-
           gridPane.add(button, col, row);
         }
-
-
       }
     }
 
@@ -351,8 +411,8 @@ public class HomeCalendarStudentController {
     dayGridPane.getColumnConstraints().addAll(column1, column2);
 
 
-    RowConstraints rowContrainConstraints = new RowConstraints(50);
-    dayGridPane.getRowConstraints().add(rowContrainConstraints);
+    RowConstraints rowConstraint = new RowConstraints(50);
+    dayGridPane.getRowConstraints().add(rowConstraint);
 
 
     int smallSize = 1200 / 11;
@@ -430,22 +490,51 @@ public class HomeCalendarStudentController {
       if (timeSlots.containsKey(startTime) && startCol != -1) {
         int startRow = timeSlots.get(startTime);
 
-        Button buttonEvent = new Button(stringEvent);
+//        Button buttonEvent = new Button(stringEvent);
+
+        VBox vBox = new VBox();
+
+        vBox.setPadding(new Insets(2, 2, 2, 2));
+        vBox.getStyleClass().addAll("panel"); // Use the card style class for the primary styling
+
+        HBox headerHbox = new HBox();
+        headerHbox.setSpacing(30);
+        headerHbox.getStyleClass().add("panel-heading"); // Updated style class for the header
+        headerHbox.setStyle("-fx-font-weight: bold;");
+        headerHbox.getChildren().add(new Label(startTime + " - " + endTime));
+
+        headerHbox.getChildren().add(new Label(event.getDescriptionDetails().getType()));
+        headerHbox.setAlignment(Pos.CENTER_LEFT);
+        vBox.getChildren().add(headerHbox);
+
+        VBox vBoxContent = new VBox();
+        vBoxContent.getStyleClass().add("panel-body"); // Updated style class for the content
+        vBoxContent.getChildren().add(new Label("Salle: " + event.getDescriptionDetails().getSalle()));
+        Hyperlink hyperlink = new Hyperlink(event.getDescriptionDetails().getEnseignant());
+        HBox teacherHbox = new HBox();
+        teacherHbox.getChildren().add(new Label("Enseignant: "));
+        teacherHbox.getChildren().add(hyperlink);
+        teacherHbox.setAlignment(Pos.CENTER_LEFT);
+        vBoxContent.getChildren().add(teacherHbox);
+        vBoxContent.getChildren().add(new Label("Matiere: " + event.getDescriptionDetails().getMatiere()));
+        vBoxContent.getChildren().add(new Label("Formation: " + event.getDescriptionDetails().getTd()));
+        vBox.getChildren().add(vBoxContent);
+
+
+//        vBox.getStyleClass().add("panel-primary");
 
         // set color to based on type of event
         if (event.getDescriptionDetails().getType() != null &&
           event.getDescriptionDetails().getType().replaceAll("\\s", "").equals("Evaluation")) {
-          buttonEvent.getStyleClass().addAll("btn-sm", "btn-danger");
+          vBox.getStyleClass().addAll("panel-danger");
         } else {
-          buttonEvent.getStyleClass().addAll("btn-sm", "btn-info");
+          vBox.getStyleClass().add("panel-primary");
         }
 
-        buttonEvent.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         GridPane gridPane = (GridPane) calendarContentHBox.lookup("#weekCalendarGridPane");
-
-        gridPane.add(buttonEvent, startCol, startRow);
-        GridPane.setRowSpan(buttonEvent, numberOf30MinutesSlots);
+        gridPane.add(vBox, startCol, startRow);
+        GridPane.setRowSpan(vBox, numberOf30MinutesSlots);
       }
     }
   }
@@ -512,7 +601,7 @@ public class HomeCalendarStudentController {
 
             LocalDate cellDate =
               LocalDate.from(getDateTimeFromYearMonthDay(todayDate.getYear(), todayDate.getMonthValue(), currentDate));
-            List<Event> eventsPerDay = countNumberOfEventPerDay(dataModel.getEvents(), cellDate);
+            List<Event> eventsPerDay = countNumberOfEventPerDay(userEvents, cellDate);
             Button button = createEventAsButton();
             String buttonText = currentDate + "\n" + eventsPerDay.size() + " Seance(s)";
             button.setText(buttonText);
@@ -626,7 +715,7 @@ public class HomeCalendarStudentController {
     column7.setPercentWidth(percentWidth);
 
 
-    RowConstraints rowContrainConstraints = new RowConstraints(50);
+    RowConstraints rowContrainConstraints = new RowConstraints(35);
     monthGridPane.getRowConstraints().add(rowContrainConstraints);
 
     monthGridPane.setId("monthCalendarGridPane");
@@ -643,14 +732,14 @@ public class HomeCalendarStudentController {
     }
   }
 
-  private void applyFilterToListOfAllEvents(int activeWeekOfYear, List<Event> events) {
+  private void applyFilterForEventInActiveWeek(int activeWeekOfYear, List<Event> events) {
     observableEvents.clear();
     List<Event> filteredEvent = new ArrayList<>();
     for (Event event : events) {
-      //to be updated
-      if (isValidDateFormat(event.getDtStart()) && isValidDateFormat(event.getDtEnd()) &&
-        isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(), activeWeekOfYear) &&
-        (event.getDescriptionDetails().getTd().contains("IA") || event.getDescriptionDetails().getTd().contains("M1 INTEL"))) {
+      if (isValidDateFormat(event.getDtStart()) &&
+          isValidDateFormat(event.getDtEnd()) &&
+          isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(), activeWeekOfYear)
+      ) {
         {
           filteredEvent.add(event);
         }
@@ -710,13 +799,11 @@ public class HomeCalendarStudentController {
 
 
   private void applyFilterToListOfAllEventsForDayCalendar(List<Event> events) {
-    observableEvents.clear();
     List<Event> filteredEvent = new ArrayList<>();
     for (Event event : events) {
-      //to be updated
-      if (isValidDateFormat(event.getDtStart()) && isValidDateFormat(event.getDtEnd()) &&
-        isEventInActiveDay(event.getDtStart()) &&
-        (event.getDescriptionDetails().getTd().contains("IA") || event.getDescriptionDetails().getTd().contains("M1 INTEL"))) {
+      if (isValidDateFormat(event.getDtStart()) &&
+        isValidDateFormat(event.getDtEnd()) &&
+        isEventOnTheActiveDay(event.getDtStart())) {
         {
           filteredEvent.add(event);
         }
@@ -726,18 +813,34 @@ public class HomeCalendarStudentController {
     observableEvents.addAll(filteredEvent);
   }
 
-  public boolean isEventInActiveDay(String dtStart) {
+  public void applyFilterForDayCalendar(List<Event> listEvent) {
+    observableEvents.clear();
+    List<Event> filteredEvents = new ArrayList<>();
+    for (Event event : listEvent) {
+      if (isValidDateFormat(event.getDtStart()) &&
+        isValidDateFormat(event.getDtEnd())
+        && isEventOnTheActiveDay(event.getDtStart())) {
+        {
+          filteredEvents.add(event);
+        }
+      }
+
+    }
+    observableEvents.addAll(filteredEvents);
+  }
+
+  public boolean isEventOnTheActiveDay(String dtStart) {
     // Create a formatter with the specified pattern
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'");
 
     // Parse the string to LocalDateTime
-    LocalDateTime activeDate = LocalDateTime.parse(dtStart, formatter);
+    LocalDateTime startEventDate = LocalDateTime.parse(dtStart, formatter);
 
     // Convert activeDate to LocalDate for comparison
-    LocalDate activeLocalDate = activeDate.toLocalDate();
+    LocalDate startEventDateLocalDate = startEventDate.toLocalDate();
 
     // Compare todayDate with the date part of activeDate
-    return todayDate.isEqual(activeLocalDate); // True if it's the same day, false otherwise
+    return todayDate.isEqual(startEventDateLocalDate); // True if it's the same day, false otherwise
   }
 
   public void moveToTheNextDay() {
@@ -758,7 +861,7 @@ public class HomeCalendarStudentController {
     Label label = (Label) calendarContentHBox.lookup("#dayLabel");
 
     label.setText(getDayLabelStr());
-    applyFilterToListOfAllEventsForDayCalendar(dataModel.getEvents());
+    applyFilterToListOfAllEventsForDayCalendar(userEvents);
 
     String monthName = todayDate.getMonth().getDisplayName(TextStyle.FULL, Locale.FRANCE);
     String capitalizedMonthName = monthName.substring(0, 1).toUpperCase() + monthName.substring(1).toLowerCase();
@@ -786,13 +889,15 @@ public class HomeCalendarStudentController {
 
   public void onNextButtonHandle(ActionEvent actionEvent) {
 
+
     if (calendarTypeComboBox.getValue().equals("Jour")) {
       moveToTheNextDay();
+      applyFilterForDayCalendar(userEvents);
     } else if (calendarTypeComboBox.getValue().equals("Semaine")) {
       todayDate = todayDate.plusWeeks(1);
       int weekOfYear = todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear());
 
-      applyFilterToListOfAllEvents(weekOfYear, dataModel.getEvents());
+      applyFilterForEventInActiveWeek(weekOfYear, userEvents);
       updateActiveMonthLabel();
     } else if (calendarTypeComboBox.getValue().equals("Mois")) {
       forwardOneMonth();
@@ -803,12 +908,12 @@ public class HomeCalendarStudentController {
 
     if (calendarTypeComboBox.getValue().equals("Jour")) {
       moveToThePrevDay();
-
+      applyFilterForDayCalendar(userEvents);
     } else if (calendarTypeComboBox.getValue().equals("Semaine")) {
 
       todayDate = todayDate.minusWeeks(1);
       int weekOfYear = todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear());
-      applyFilterToListOfAllEvents(weekOfYear, dataModel.getEvents());
+      applyFilterForEventInActiveWeek(weekOfYear, userEvents);
       updateActiveMonthLabel();
     } else if (calendarTypeComboBox.getValue().equals("Mois")) {
       backOneMonth();
@@ -835,11 +940,11 @@ public class HomeCalendarStudentController {
 
       this.todayDate = LocalDate.now();
       int weekOfYear = todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear());
-      applyFilterToListOfAllEvents(weekOfYear, observableEvents);
+      applyFilterForEventInActiveWeek(weekOfYear, observableEvents);
       updateActiveMonthLabel();
     } else {
       this.todayDate = LocalDate.now();
-      applyFilterToListOfAllEventsForDayCalendar(dataModel.getEvents());
+      applyFilterToListOfAllEventsForDayCalendar(userEvents);
       updateMonthLabelOnDayOneMove();
       updateActiveMonthLabel();
     }
@@ -854,50 +959,49 @@ public class HomeCalendarStudentController {
   }
 
   public void handleBtnOnActionEnseignant(ActionEvent actionEvent) {
-    removeItemFromBreadCrumbBar(selectedCalendarCategory);
     selectedCalendarCategory = "Enseignant";
-    addItemToBreadCrumbBar(selectedCalendarCategory);
+    searchCategoryType.setText("Rechercher un emploi du temps par " + selectedCalendarCategory);
     autoCompletionBinding.dispose();
     autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, enseignantList);
 
   }
 
   public void handleBtnOnActionMatiere(ActionEvent actionEvent) {
-    removeItemFromBreadCrumbBar(selectedCalendarCategory);
     selectedCalendarCategory = "Matiere";
-    addItemToBreadCrumbBar(selectedCalendarCategory);
     autoCompletionBinding.dispose();
     autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, matiereList);
   }
 
   public void handleBtnOnActionSalle(ActionEvent actionEvent) {
-    removeItemFromBreadCrumbBar(selectedCalendarCategory);
     selectedCalendarCategory = "Salle";
-    addItemToBreadCrumbBar(selectedCalendarCategory);
+    searchCategoryType.setText("Rechercher un emploi du temps par " + selectedCalendarCategory);
     autoCompletionBinding.dispose();
-    autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, salleList);
+    autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, getListSalle(dataModel.getEvents()));
   }
 
   public void handleBtnOnActionFormation(ActionEvent actionEvent) {
-
-    removeItemFromBreadCrumbBar(selectedCalendarCategory);
     selectedCalendarCategory = "Formation";
-    addItemToBreadCrumbBar(selectedCalendarCategory);
+    searchCategoryType.setText("Rechercher un emploi du temps par " + selectedCalendarCategory);
     autoCompletionBinding.dispose();
     autoCompletionBinding = TextFields.bindAutoCompletion(filterAutocompleteTextField, formationList);
   }
 
   public void handleBtnOnActionSearch(ActionEvent actionEvent) {
+    observableEvents.clear();
+    List<Event> filteredEvents = filterBasedOnFirstStepFilterCategory(userEvents);
+    observableEvents.addAll(filteredEvents);
+  }
 
 
-    System.out.println("Search button clicked");
+  public List<Event> filterBasedOnFirstStepFilterCategory(List<Event> events) {
+
     String filterText = filterAutocompleteTextField.getText().toLowerCase();
 
     List<Event> filteredEvents = new ArrayList<>();
-    List<Event> events = dataModel.getEvents();
-    observableEvents.clear();
-    if (selectedCalendarCategory.equals("Formation")) {
-      filteredEvents = events
+
+
+    filteredEvents = switch (selectedCalendarCategory) {
+      case "Formation" -> events
         .stream()
         .filter(event ->
           isValidDateFormat(event.getDtStart()) &&
@@ -905,65 +1009,208 @@ public class HomeCalendarStudentController {
             isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),
               todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
             event.getDescriptionDetails().getTd() != null &&
-            event.getDescriptionDetails().getTd().toLowerCase().contains(filterText))
+            isFormationDerivativeNameEqual(filterText, event.getDescriptionDetails().getTd()))
         .collect(Collectors.toList());
-
-    } else if (selectedCalendarCategory.equals("Matiere")) {
-      filteredEvents = events
+      case "Salle" -> events
         .stream()
         .filter(event ->
           isValidDateFormat(event.getDtStart()) &&
             isValidDateFormat(event.getDtEnd()) &&
             isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),
               todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
-            event.getDescriptionDetails().getMatiere() != null &&
-            event.getDescriptionDetails().getMatiere().toLowerCase().contains(filterText))
-        .collect(Collectors.toList());
-    } else if (selectedCalendarCategory.equals("Salle")) {
-      filteredEvents = events
-        .stream()
-        .filter(event ->
-          isValidDateFormat(event.getDtStart()) &&
-            isValidDateFormat(event.getDtEnd()) &&
-            isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
             event.getDescriptionDetails().getSalle() != null &&
             event.getDescriptionDetails().getSalle().toLowerCase().contains(filterText)
 
         )
         .collect(Collectors.toList());
-    } else if (selectedCalendarCategory.equals("Enseignant")) {
-      filteredEvents = events
+      case "Enseignant" -> events
         .stream()
         .filter(event ->
           isValidDateFormat(event.getDtStart()) &&
             isValidDateFormat(event.getDtEnd()) &&
-            isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
-          event.getDescriptionDetails().getEnseignant() != null &&
-          event.getDescriptionDetails().getEnseignant().toLowerCase().contains(filterText))
+            isActiveWeekOfYearEqualToEventStartWeekOfYear(event.getDtStart(),
+              todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear())) &&
+            event.getDescriptionDetails().getEnseignant() != null &&
+            event.getDescriptionDetails().getEnseignant().toLowerCase().contains(filterText))
         .collect(Collectors.toList());
+      default -> filteredEvents;
+    };
 
+    return filteredEvents;
+  }
+
+  private boolean isFormationDerivativeNameEqual(String filterText, String eventTd) {
+
+
+    Map<String, List<String>> filterMap = getFormationDerivativeNameStringListMap();
+
+    if (filterText.isEmpty()) {
+      return true;
     }
 
-    observableEvents.addAll(filteredEvents);
+    if (!formationList.contains(filterText.toUpperCase())) {
+      return false;
+    }
+
+    String formationKey = filterText.split(" ")[1];
+
+    for (String formationDerivativeName : filterMap.get(formationKey)) {
+      if (eventTd.contains(formationDerivativeName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private Map<String, List<String>> getFormationDerivativeNameStringListMap() {
+    Map<String, List<String>> filterMap = new HashMap<>();
+    List<String> iaList = new ArrayList<>(
+      Arrays.asList("M1 INTELLIGENCE ARTIFICIELLE (IA)", "M1 INTELLIGENCE ARTIFICIELLE", "M1-IA-IL-CLA", "M1-IA-IL-ALT"));
+    List<String> sicomList = new ArrayList<>(Arrays.asList("M1 SICOM", "M1 SYSTEMES INFORMATIQUES COMMUNICANTS (SICOM)",
+      "m1-sicom-alt", "m1-sicom-cla"));
+    List<String> ilsenList =
+      new ArrayList<>(Arrays.asList("M1-ILSEN-alt-GR1", "M1-ILSEN-alt-GR2", "M1-ILSEN-cla-Gr1", "M1-ILSEN-cla-Gr2"));
+    List<String> l3info = new ArrayList<>(Arrays.asList("L3 INFORMATIQUE", "L3-INFO-ALT", "L3-INFO-CLA"));
+    filterMap.put("ia", iaList);
+    filterMap.put("sicom", sicomList);
+    filterMap.put("ilsen", ilsenList);
+    filterMap.put("informatique", l3info);
+    return filterMap;
   }
 
   public void handleCalendarTypeComboBoxAction(ActionEvent actionEvent) {
 
-    if (calendarTypeComboBox.getValue().equals("Jour")) {
-      calendarContentHBox.getChildren().remove(0);
-      displayDayCalendarGridPane();
-      applyFilterToListOfAllEventsForDayCalendar(dataModel.getEvents());
-    } else if (calendarTypeComboBox.getValue().equals("Semaine")) {
-      calendarContentHBox.getChildren().remove(0);
-      displayWeekCalendarGridPane();
+//    if (calendarTypeComboBox.getValue().equals("Jour")) {
+//      calendarContentHBox.getChildren().remove(0);
+//      displayDayCalendarGridPane();
+//      applyFilterToListOfAllEventsForDayCalendar(userEvents);
+//    } else if (calendarTypeComboBox.getValue().equals("Semaine")) {
+//      calendarContentHBox.getChildren().remove(0);
+//      displayWeekCalendarGridPane();
+//      int weekOfYear = todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear());
+//      applyFilterForEventInActiveWeek(weekOfYear, userEvents);
+//    } else {
+//      calendarContentHBox.getChildren().remove(0);
+//      displayMonthCalendarGridPane();
+//      displayEventOnMonthCalendarGridPane();
+//    }
 
-      int weekOfYear = todayDate.get(WeekFields.of(Locale.FRANCE).weekOfYear());
-      applyFilterToListOfAllEvents(weekOfYear, dataModel.getEvents());
-    } else {
-      calendarContentHBox.getChildren().remove(0);
-      displayMonthCalendarGridPane();
-      displayEventOnMonthCalendarGridPane();
+  }
+
+  public void handleFilterByAction(ActionEvent actionEvent) {
+
+
+    switch (filterBy.getValue()) {
+      case "Groupe":
+        filterByOption.setItems(getListGroupPedagogic());
+        break;
+      case "Type":
+        filterByOption.setItems(getListTypeCours());
+        break;
+      case "Matiere":
+        filterByOption.setItems(getMatiereList(dataModel.getEvents()));
+        break;
+      case "Salle":
+        filterByOption.setItems(getListSalle(dataModel.getEvents()));
+        break;
+    }
+  }
+
+  public void handleBnOnActionFilterOption(ActionEvent actionEvent) {
+    System.out.println("Filter option selected: " + filterByOption.getValue());
+    applyFilterToTheLastStepOption();
+  }
+
+  public void applyFilterToTheLastStepOption() {
+    List<Event> filteredEvents = filterBasedOnFirstStepFilterCategory(userEvents);
+
+    if (filterByOption.getValue() != null) {
+
+
+      if (filterBy.getValue() != null && filterBy.getValue().equals("Groupe")) {
+        applyFilterBasedOnGroupe(filterByOption.getValue(), filteredEvents);
+      } else if (filterBy.getValue() != null && filterBy.getValue().equals("Type")) {
+        applyFilterBasedOnType(filterByOption.getValue(), filteredEvents);
+      } else if (filterBy.getValue() != null && filterBy.getValue().equals("Matiere")) {
+        applyFilterBasedOnMatiere(filterByOption.getValue(), filteredEvents);
+      }
+
+    }
+  }
+
+  private void applyFilterBasedOnMatiere(String value, List<Event> filteredEvents) {
+    observableEvents.clear();
+    List<Event> filteredEvent = new ArrayList<>();
+    for (Event event : filteredEvents) {
+      if (event.getDescriptionDetails().getMatiere() != null && event.getDescriptionDetails().getMatiere().equalsIgnoreCase(value)) {
+        {
+          filteredEvent.add(event);
+        }
+      }
     }
 
+    observableEvents.addAll(filteredEvent);
+  }
+
+  private void applyFilterBasedOnGroupe(String value, List<Event> events) {
+    observableEvents.clear();
+    List<Event> filteredEvent = new ArrayList<>();
+    for (Event event : events) {
+      System.out.println("Event td: " + event.getDescriptionDetails().getTd());
+      System.out.println("Value: " + value);
+      if (event.getDescriptionDetails().getTd() != null && event.getDescriptionDetails().getTd().contains(value)) {
+        {
+          filteredEvent.add(event);
+        }
+      }
+    }
+
+    observableEvents.addAll(filteredEvent);
+  }
+
+  private void applyFilterBasedOnSalle(String value, List<Event> events) {
+    observableEvents.clear();
+    List<Event> filteredEvent = new ArrayList<>();
+
+
+    for (Event event : events) {
+      if (event.getDescriptionDetails().getSalle() != null
+        && event.getDescriptionDetails().getSalle().equalsIgnoreCase(value)) {
+        {
+          filteredEvent.add(event);
+        }
+      }
+    }
+
+    observableEvents.addAll(filteredEvent);
+  }
+
+  private void applyFilterBasedOnType(String value, List<Event> events) {
+    observableEvents.clear();
+    List<Event> filteredEvent = new ArrayList<>();
+    for (Event event : events) {
+      if (event.getDescriptionDetails().getType() != null && event.getDescriptionDetails().getType().equalsIgnoreCase(value)) {
+        {
+          filteredEvent.add(event);
+        }
+      }
+    }
+
+    observableEvents.addAll(filteredEvent);
+  }
+
+
+  public void clearButtonStyle() {
+    List<String> listOfHeaderButtonIds = new ArrayList<>(Arrays.asList("btnFormation", "btnSalle", "btnEnseignant", "btnMatiere"));
+    for (String id : listOfHeaderButtonIds) {
+      ToggleButton button = (ToggleButton) vbRoot.lookup("#" + id);
+      System.out.println("Button id: " + button.getId());
+      button.getStyleClass().remove("button-header");
+    }
+  }
+
+  public void onClearFilterButton(ActionEvent actionEvent) {
+    filterByOption.setValue("");
+    filterBy.setValue("");
   }
 }
