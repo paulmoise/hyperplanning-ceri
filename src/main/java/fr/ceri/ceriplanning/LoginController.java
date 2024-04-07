@@ -52,7 +52,7 @@ public class LoginController {
     boolean isProfessor = professorCheckbox.isSelected();
     CreateConnexion individu = new CreateConnexion(username, password);
 
-//    switchToAcueil(event);
+   switchToAcueil(event);
 
     if (isStudent) {
       statusLabel.setText("Connexion en tant qu'étudiant : " + username);
