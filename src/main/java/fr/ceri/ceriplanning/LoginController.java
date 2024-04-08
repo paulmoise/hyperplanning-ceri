@@ -56,7 +56,7 @@ public class LoginController {
 //    switchToAcueil(event, new User("uapv2400954", "123", false, "GANGBADJA Paul", "IA", false ));
 
     if (isStudent) {
-      statusLabel.setText("Connexion en tant qu'étudiant : " + username);
+      statusLabel.setText("Identifiant ou mot de passe incorrect!");
       for (User e : c.getStudentList()) {
         if (e.equals(user)) {
           System.out.println("user " + e);
@@ -64,6 +64,7 @@ public class LoginController {
         }
       }
     } else if (isProfessor) {
+      statusLabel.setText("Identifiant ou mot de passe incorrect!");
       for (User e : c.getTeacherList()) {
         if (e.equals(user)) {
           switchToAcueil(event, e);
