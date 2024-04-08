@@ -22,114 +22,129 @@
 
 
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.ScrollPane?>
+<?import org.controlsfx.control.ToggleSwitch?>
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.MainViewController">
+            xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.MainViewController" >
     <top>
-        <AnchorPane prefHeight="46.0" styleClass="header"   >
+        <AnchorPane prefHeight="46.0" styleClass="header" >
 
-          <HBox alignment="CENTER" spacing="100"
-                AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0"
-                AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" >
-              <padding>
-                  <Insets bottom="5.0" left="5.0" right="15.0" />
-              </padding>
+            <HBox alignment="CENTER" spacing="100"
+                  AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0"
+                  AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="15.0"/>
+                </padding>
+                <HBox alignment="CENTER">
+                    <padding>
+                        <Insets left="5"/>
+                    </padding>
+                    <Label fx:id="darkModeText" textFill="#e7e5e5" style="-fx-font-weight: bold" text="Lite Mode"/>
+                    <ToggleSwitch fx:id="darkMode" />
+                </HBox>
 
-              <Label text="CERI Planning" textFill="#e7e5e5">
-                  <font>
-                      <Font size="20.0"/>
-                  </font>
-              </Label>
+                <Region HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Label text="CERI Planning" textFill="#e7e5e5">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                </Label>
 
-              <Region HBox.hgrow="ALWAYS"  maxWidth="Infinity"/>
-              <HBox spacing="5" >
-                  <padding>
-                      <Insets top="10"/>
-                  </padding>
-                  <ImageView fitHeight="30.0" fitWidth="30.0"  pickOnBounds="true" preserveRatio="true">
-                      <image>
-                          <Image url="@icons/user.png"/>
-                      </image>
-                  </ImageView>
-                  <Label fx:id="activeUser"  textFill="#e7e5e5" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0">
-                      <font>
-                          <Font size="20.0"/>
-                      </font>
-                  </Label>
-              </HBox>
-          </HBox>
+                <Region HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <HBox spacing="5">
+                    <padding>
+                        <Insets top="10" right="10"/>
+                    </padding>
+                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@icons/user.png"/>
+                        </image>
+                    </ImageView>
+                    <Label fx:id="activeUser" textFill="#e7e5e5" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0">
+                        <font>
+                            <Font size="20.0"/>
+                        </font>
+                    </Label>
+                </HBox>
+            </HBox>
 
         </AnchorPane>
     </top>
     <left>
-        <AnchorPane style="-fx-background-color:#05071F ;" >
-            <VBox alignment="TOP_CENTER"  spacing="15.0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <AnchorPane styleClass="side-bar">
+            <VBox alignment="TOP_CENTER" spacing="15.0" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+                  AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
                 <padding>
                     <Insets top="10" left="5" right="5"/>
                 </padding>
-                <Button fx:id="btnHome" alignment="BASELINE_LEFT" graphicTextGap="22.0"
-                         mnemonicParsing="false"
+                <Button fx:id="btnHome" alignment="BASELINE_LEFT" graphicTextGap="12.0"
+                        mnemonicParsing="false"
                         onAction="#handleBtnOnActionHome" prefHeight="45.0"
                         VBox.vgrow="ALWAYS" maxWidth="Infinity"
-                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Home" textFill="#e7e5e5">
+                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Home" textFill="#e7e5e5"
+                styleClass="btn-nav">
                     <padding>
 
                     </padding>
                     <graphic>
-                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-home" iconSize="20"/>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-home" iconSize="15"/>
                     </graphic>
                 </Button>
 
-                <Button fx:id="btnAjouterEvent" alignment="BASELINE_LEFT" graphicTextGap="22.0"
+                <Button fx:id="btnAjouterEvent" alignment="BASELINE_LEFT" graphicTextGap="12.0"
                         VBox.vgrow="ALWAYS" maxWidth="Infinity" mnemonicParsing="false"
                         onAction="#handleEventManagementButton" prefHeight="45.0"
                         style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Evenements"
-                        textFill="#e7e5e5">
+                        textFill="#e7e5e5" styleClass="btn-nav">
                     <padding>
 
                     </padding>
                     <graphic>
-                        <FontIcon iconColor="#fcf9f9" iconLiteral="fab-java" iconSize="20"/>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fab-java" iconSize="15"/>
                     </graphic>
                 </Button>
 
-                <Button fx:id="btnProfile" alignment="BASELINE_LEFT" graphicTextGap="22.0"
+                <Button fx:id="btnProfile" alignment="BASELINE_LEFT" graphicTextGap="12.0"
                         VBox.vgrow="ALWAYS" maxWidth="Infinity" mnemonicParsing="false"
                         onAction="#handleBtnOnActionProfile" prefHeight="45.0"
-                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Profile" textFill="#e7e5e5">
+                        style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Profile"
+                        textFill="#e7e5e5"
+                        styleClass="btn-nav">
                     <padding>
 
                     </padding>
                     <graphic>
-                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-user" iconSize="20"/>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-user" iconSize="15"/>
                     </graphic>
                 </Button>
-                <Button fx:id="btnSettings" alignment="BASELINE_LEFT" graphicTextGap="22.0"
+                <Button fx:id="btnSettings" alignment="BASELINE_LEFT" graphicTextGap="12.0"
                         VBox.vgrow="ALWAYS" maxWidth="Infinity" mnemonicParsing="false"
                         onAction="#handleBtnOnActionSettings" prefHeight="45.0"
                         style="-fx-background-color: #05071F; -fx-start-margin: 5px" text="Parametre"
-                        textFill="#e7e5e5">
+                        textFill="#e7e5e5"
+                        styleClass="btn-nav">
                     <padding>
 
                     </padding>
                     <graphic>
-                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-book" iconSize="20"/>
+                        <FontIcon iconColor="#fcf9f9" iconLiteral="fas-book" iconSize="15"/>
                     </graphic>
                 </Button>
 
             </VBox>
         </AnchorPane>
     </left>
-    <center>
-        <VBox>
-            <padding>
-                <Insets bottom="10" />
-            </padding>
-            <StackPane fx:id="spSubScene" VBox.vgrow="ALWAYS"/>
-        </VBox>
+    <center >
+
+            <VBox>
+
+                <StackPane fx:id="spSubScene" VBox.vgrow="ALWAYS" />
+            </VBox>
+
     </center>
     <bottom>
-        <AnchorPane prefHeight="46.0" style="-fx-background-color: #000835;">
-            <CheckBox fx:id="cbDarkMode" text="Mode sombre" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="8.0"/>
+        <AnchorPane prefHeight="46.0" styleClass="footer">
+
         </AnchorPane>
     </bottom>
 

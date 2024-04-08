@@ -19,11 +19,12 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.ScrollPane?>
 <VBox fx:id="vbRoot" xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.HomeCalendarStudentController">
+      xmlns:fx="http://javafx.com/fxml" fx:controller="fr.ceri.ceriplanning.HomeCalendarStudentController" alignment="CENTER">
 
 
-    <AnchorPane  style="-fx-background-color:#f8f8ff;" >
+    <AnchorPane  >
         <padding>
             <Insets bottom="5.0"  />
         </padding>
@@ -40,7 +41,8 @@
                         prefWidth="125" mnemonicParsing="false"
                         onAction="#handleBtnOnActionFormation" prefHeight="30.0"
                         maxWidth="Infinity"
-                        text="Formation">
+                        text="Formation"
+                >
                     <graphic>
                         <FontIcon iconColor="#fcf9f9" iconLiteral="fas-graduation-cap" iconSize="15"/>
                     </graphic>
@@ -92,7 +94,8 @@
 
                 <HBox  alignment="CENTER" spacing="10">
                     <TextField fx:id="filterAutocompleteTextField" layoutX="15.0" layoutY="33.0" prefWidth="250.0"
-                               promptText="Selectionner une formation">
+                               promptText="Selectionner"
+                               onKeyPressed="#onSearchEnterPressed">
                     </TextField>
                     <Button fx:id="btnSearch" alignment="BASELINE_LEFT" graphicTextGap="5.0"
                             prefWidth="120" mnemonicParsing="false"
@@ -174,8 +177,11 @@
         </VBox>
     </AnchorPane>
 
-    <HBox fx:id="calendarContentHBox" >
+    <ScrollPane VBox.vgrow="ALWAYS" fitToWidth="true" fitToHeight="true">
+        <HBox fx:id="calendarContentHBox" VBox.vgrow="ALWAYS" alignment="CENTER">
 
-    </HBox>
+        </HBox>
+    </ScrollPane>
+
 
 </VBox>

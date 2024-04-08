@@ -5,15 +5,31 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import org.controlsfx.control.ToggleSwitch;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
+
+import static fr.ceri.ceriplanning.helper.Utils.updateDarkMode;
 
 public class MainViewController {
   @FXML
   public Label activeUser;
+
+  @FXML
+  public ToggleSwitch darkMode;
+
+  @FXML
+  public Label darkModeText;
+
+  @FXML
+  public Button btnAjouterEvent;
   @FXML
   private StackPane spSubScene;
   @FXML
@@ -24,7 +40,35 @@ public class MainViewController {
 
 
   public void setSubSceneInitialNode() {
+
+
+
+
+
+    darkMode.setSelected(dataModel.getActiveUser().isDarkMode());
+
+    btnAjouterEvent.setDisable(!dataModel.getActiveUser().isTeacher());
+
+    darkMode.selectedProperty().addListener((obs, oldVal, newVal) -> {
+      URL darkModeStyle = getClass().getResource("css/dark-mode-style.css");
+      URL liteModeStyle = getClass().getResource("css/lite-mode-style.css");
+      darkModeText.setText(newVal ? "Dark Mode" : "Lite Mode");
+      URL style = newVal ? darkModeStyle: liteModeStyle;
+      System.out.println("newVal = " + newVal);
+      Scene scene = darkMode.getScene();
+      scene.getStylesheets().clear();
+      scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+      scene.getStylesheets().add(Objects.requireNonNull(style).toExternalForm());
+
+        if (dataModel.getActiveUser().isTeacher()) {
+          updateDarkMode("data/teacher.txt", dataModel.getActiveUser().getUsername(), String.valueOf(newVal));
+        }else{
+            updateDarkMode("data/etudiant.txt", dataModel.getActiveUser().getUsername(), String.valueOf(newVal));
+        }
+    });
     activeUser.setText(dataModel.getActiveUser().getUsername());
+
+
     btnHome.fire();
   }
 

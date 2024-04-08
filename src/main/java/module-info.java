@@ -8,7 +8,7 @@ module fr.ceri.ceriplanning.hyperplaningceri {
   requires org.kordamp.ikonli.javafx;
   requires org.kordamp.ikonli.fontawesome5;
   requires org.controlsfx.controls;
-
+  requires java.desktop;
 
 
   opens fr.ceri.ceriplanning to javafx.fxml;

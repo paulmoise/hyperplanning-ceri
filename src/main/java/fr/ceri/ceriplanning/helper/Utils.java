@@ -1,11 +1,17 @@
 package fr.ceri.ceriplanning.helper;
-
+import java.awt.Desktop;
 
 import fr.ceri.ceriplanning.model.DescriptionDetails;
 import fr.ceri.ceriplanning.model.Event;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
@@ -29,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static fr.ceri.ceriplanning.helper.ICSFileParser.parseIcsFile;
 
@@ -305,6 +312,7 @@ public class Utils {
     listTypeCours.add("CM");
     listTypeCours.add("TD");
     listTypeCours.add("TP");
+    listTypeCours.add("CM/TD");
     listTypeCours.add("Conference");
     listTypeCours.add("Evaluation");
     observableList.addAll(listTypeCours);
@@ -355,6 +363,56 @@ public class Utils {
     return observableList;
   }
 
+  public static void sendEmailToTeacher(String teacherEmail) {
+    if (teacherEmail != null && !teacherEmail.isEmpty()) {
+      String mailtoLink = "mailto:" + teacherEmail;
+      try {
+        System.out.println("Ae.");
+        Desktop.getDesktop().mail(new URI(mailtoLink));
+      } catch (IOException | URISyntaxException ex) {
+        ex.printStackTrace();
+      }
+    }
+
+  }
+  public static String constructMail(String name) {
+    String[] parts = name.split(" ");
+    if (parts.length >= 2) {
+      String firstName = parts[0];
+      String lastName = parts[1].replace("\\","").replace(",","");
+      return lastName + "." + firstName + "@univ-avignon.fr";
+    } else {
+      return "";
+    }
+  }
+
+
+  public static void updateDarkMode(String filePath, String uuid, String newValue) {
+    try {
+      // Read all lines from the file
+      Path path = Paths.get(filePath);
+      List<String> lines = Files.readAllLines(path);
+
+      // Update the last value for lines that contain the UUID
+      List<String> updatedLines = lines.stream()
+        .map(line -> {
+          if (line.contains(uuid)) {
+            String[] parts = line.split(";");
+            parts[parts.length - 1] = newValue; // Update the last part
+            return String.join(";", parts);
+          } else {
+            return line;
+          }
+        })
+        .collect(Collectors.toList());
+
+      // Write the updated lines back to the file
+      Files.write(path, updatedLines);
+      System.out.println("File updated successfully.");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
 }
 
