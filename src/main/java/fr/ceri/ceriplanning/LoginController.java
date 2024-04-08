@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 public class LoginController {
   @FXML
   private TextField usernameField;
@@ -41,6 +44,27 @@ public class LoginController {
 
   @FXML
   public void initialize() {
+
+    // Add listener to studentCheckbox
+    studentCheckbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+      @Override
+      public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        if (newValue) {
+          professorCheckbox.setSelected(false);
+        }
+      }
+    });
+
+    // Add listener to professorCheckbox
+    professorCheckbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+      @Override
+      public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        if (newValue) {
+          studentCheckbox.setSelected(false);
+        }
+      }
+    });
+
     c = new Conexion();
   }
 
