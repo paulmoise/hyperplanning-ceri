@@ -18,12 +18,13 @@
 -->
 
 <AnchorPane fx:id="vbRoot" prefHeight="357.0" prefWidth="595.0" stylesheets="@css/formulaire-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.ceri.ceriplanning.EventsManagementController">
-    <VBox layoutY="-2.0" prefHeight="392.0" prefWidth="640.0" spacing="10" style="-fx-margin: 10px; -fx-background-color: ; -fx-padding: 10px; -fx-background-color: ;">
+    <VBox layoutY="-2.0" prefHeight="392.0" prefWidth="640.0" spacing="10" style="-fx-margin: 10px;" alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+    >
 
         <!-- Vos autres éléments de formulaire ici -->
 
-        <VBox prefHeight="115.0" prefWidth="504.0" spacing="10" style="-fx-padding: 10px;">
-            <HBox spacing="10" style="-fx-margin: 10px;">
+        <VBox prefHeight="115.0" prefWidth="504.0" spacing="10" style="-fx-padding: 10px;" alignment="CENTER" >
+            <HBox spacing="10" style="-fx-margin: 10px;" alignment="CENTER">
                 <Label prefHeight="40.0" prefWidth="76.0" stylesheets="@css/formulaire-style.css" text="Date :">Date  :</Label>
                 <DatePicker fx:id="Ddebut" prefHeight="36.0" prefWidth="198.0" />
                 <ComboBox fx:id="HdebutComboBox" prefWidth="150" promptText="DEBUT" styleClass="combo-box" />

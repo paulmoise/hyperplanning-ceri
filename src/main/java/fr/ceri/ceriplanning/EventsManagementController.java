@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -229,23 +230,55 @@ public class EventsManagementController {
     return Availablesalle;
   }
 
-  public void showAlert(String title, String header, String content, String alertType) {
-    // Chargez le fichier CSS
-    // scene.getStylesheets().add(getClass().getResource("alert-dialog.css").toExternalForm());
+//  public void showAlert(String title, String header, String content, String alertType) {
+//    // Chargez le fichier CSS
+//    // scene.getStylesheets().add(getClass().getResource("alert-dialog.css").toExternalForm());
+//
+//    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//    alert.setTitle(title);
+//    alert.setHeaderText(header);
+//    alert.setContentText(content);
+//
+//    // Obtenez la fenêtre de dialogue de l'alerte
+//    DialogPane dialogPane = alert.getDialogPane();
+//
+//    // Supprimez toutes les classes de style actuelles
+////    dialogPane.getStyleClass().removeAll("alert-success", "alert-info", "alert-warning", "alert-danger");
+//
+//    // Ajoutez la classe d'alerte Bootstrap spécifiée à la fenêtre de dialogue
+//    dialogPane.getStyleClass().addAll("alert", "alert-" + alertType);
+//
+//    // Ajoutez un bouton de confirmation à la boîte de dialogue
+//    alert.getButtonTypes().setAll(ButtonType.OK);
+//
+//    // Affichez la boîte de dialogue et attendez la réponse de l'utilisateur
+//    alert.showAndWait();
+//  }
 
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+  public void showAlert(String title, String header, String content, String alertType) {
+    // Déterminez le type d'alerte basé sur le paramètre alertType
+    Alert.AlertType type = switch (alertType) {
+      case "success" -> Alert.AlertType.INFORMATION; // Utilisez INFORMATION pour succès
+      case "danger" -> Alert.AlertType.ERROR; // Utilisez ERROR pour danger
+      case "warning" -> Alert.AlertType.WARNING; // WARNING pour avertissement
+      default -> Alert.AlertType.INFORMATION; // Par défaut à INFORMATION
+    };
+
+    Alert alert = new Alert(type);
     alert.setTitle(title);
     alert.setHeaderText(header);
     alert.setContentText(content);
 
-    // Obtenez la fenêtre de dialogue de l'alerte
     DialogPane dialogPane = alert.getDialogPane();
 
-    // Supprimez toutes les classes de style actuelles
+    // Chargez le fichier CSS
+    dialogPane.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+
+    // Supprimez toutes les classes de style actuelles pour éviter les conflits
     dialogPane.getStyleClass().removeAll("alert-success", "alert-info", "alert-warning", "alert-danger");
 
-    // Ajoutez la classe d'alerte Bootstrap spécifiée à la fenêtre de dialogue
-    dialogPane.getStyleClass().add("alert-" + alertType);
+    // Ajoutez la classe d'alerte spécifiée à la fenêtre de dialogue, basée sur alertType
+    dialogPane.getStyleClass().addAll("alert", "alert-" + alertType);
 
     // Ajoutez un bouton de confirmation à la boîte de dialogue
     alert.getButtonTypes().setAll(ButtonType.OK);
@@ -253,6 +286,7 @@ public class EventsManagementController {
     // Affichez la boîte de dialogue et attendez la réponse de l'utilisateur
     alert.showAndWait();
   }
+
 }
 
 
